@@ -1,2 +1,7 @@
 # hyperfunds
 An application built on Hyperledger Fabric
+
+## Introduction
+Universities and organisations across the globe promote top quality research by reserving a large amount of funds received from government, corporations and philanthropists for the purpose. The aim of this project, Hyperfunds, is to ensure that the faculty at Ashoka University spend their fixed reserve of funds reliably with approval from the right parties - usually administrators or supervisors - using hyperledger.
+
+In this project, we consider three types of parties -- the faculty, the Accounts department, and the Dean of Research. An amount of funds is earmarked for each faculty member every academic year by the Dean of Research. Funds that remain unspent by the end of an academic year do not carry on to the next. If a faculty member has Rs. 1,00,000 in the beginning, every time they want to spend an amount lesser than a fixed threshold, say, x ≤ 1,00,000 (let x = 40,000 here), they need to get it approved by the Accounts department. However, every time they want to spend an amount that exceeds the 40,000 threshold, they would require an approval from the Accounts department as well as the Dean of Research. It is important to note that neither the Accounts department nor the Dean of Research is allowed to spend any of the funds earmarked for faculty. Thus, we also note that, in every spend-request either two of parties (faculty and Accounts department) or all three of the parties are involved (faculty, Accounts department, and the Dean of Research).   
