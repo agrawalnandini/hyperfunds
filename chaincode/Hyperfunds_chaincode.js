@@ -4,7 +4,7 @@ const {Contract} = require('fabric-contract-api');                  //retrieving
 const ClientIdentity = require('fabric-shim').ClientIdentity;       //retrieving ClientIdentity from fabric to use its features
 
 var balance={};     //global dictionary for balance with key:faculty_email and value: account balance
-let txn_id=-1;
+let txnID=-1;
 let threshold=40000;    //look into it later! Maybe let the user decide interactively
 
 class Hyperfunds extends Contract
