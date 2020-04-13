@@ -1,4 +1,4 @@
-# hyperfunds
+# Hyperfunds
 An application built on Hyperledger Fabric
 
 ## Introduction
