@@ -18,6 +18,38 @@ class Hyperfunds extends Contract
         //create key-value pair
         //user id- email of the user while enrolling
 
+        console.info('============= START : CreateProposal ===========');
+
+        let cid = new ClientIdentity(ctx.stub);
+        let userID = cid.getID();
+
+        console.log(`Proposed Amount : ${proposed_amount}`);
+        console.log(`userID  : ${userID}`);
+        console.log(`emailID : ${faculty_email_id}`);
+
+        const approvers = [];
+        const approvals = 0;
+
+        const msg = {
+            proposed_amount,
+            userID,
+            approvals,
+            approvers,
+            faculty_email_id,
+        };
+
+        // if new faculty, add faculty to balance dictionary
+        if (!(balance.includes(faculty_email_id))) {
+            console.log(`New faculty! Added to the chain state.`);
+            balance.faculty_email_id = 0;        //Add to dictionary
+        }
+
+        txnID += 1;
+
+        await ctx.stub.putState(txnID.toString(), Buffer.from(JSON.stringify(msg)));
+        console.info('============= END : createMsg ===========');
+
+
     }
 
     async CreateApprovalTxn(ctx,txnid){
