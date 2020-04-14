@@ -27,14 +27,16 @@ class Hyperfunds extends Contract
         console.log(`userID  : ${userID}`);
         console.log(`emailID : ${faculty_email_id}`);
 
-        if(userID.includes(faculty_email_id) || userID.includes(/*dor email id*/)) {
+        if(userID.includes(faculty_email_id) || userID.includes(dor_email)) {
             if(userID.includes(faculty_email_id)){
                 //Faculty is only allowed to deduct funds
                 proposed_amount = proposed_amount * (-1)
             }
 
+            //Obtain current balance for the faculty
             current_balance = balance[userID]
 
+            //Transaction is deducted only if there is sufficient balance
             if ((current_balance + proposed_amount) >= 0) {
 
                 const approvers = [];
