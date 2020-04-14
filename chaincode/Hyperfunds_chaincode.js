@@ -27,7 +27,7 @@ class Hyperfunds extends Contract
         let approverid=cid.getID();
 
         //approval cannot come from faculty
-        if((approverid.includes('dor@ashoka.edu.in')||approverid.includes('accounts@ashoka.edu.in'))==false)     
+        if((approverid.includes(dor_email)||approverid.includes(accdept_email))==false)     
         {
             throw new Error(`Faculty cannot Approve Transaction!`);
         }
@@ -55,44 +55,62 @@ class Hyperfunds extends Contract
              console.log('Your Approval is Submitted');
 
              //checking for how many approvals required
+             balanceAmt=balance[txn.faculty_email_id];
              if(txn.proposed_amount>=threshold)
              {
-                 if((txn.approvers.includes('dor@ashoka.edu.in') && txn.approvers.includes('accounts@ashoka.edu.in')) && txn.approvals==2) 
+                 if((txn.approvers.includes(dor_email) && txn.approvers.includes(accdept_email)) && txn.approvals==2 && ((balanceAmt+proposed_amount)>=0)) 
                  {
                      txn.approvals=-1;
-                     console.log(`Txn ${txnid} approval count is satisfied thus this trabnsaction is approved!`);
+                     balance[txn.faculty_email_id]=balanceAmt+proposed_amount;
+                     console.log(`Txn ${txnid} approval count is satisfied thus this transaction is approved and balance is updated!`);
                  }
             }
             else
             {
-                if((txn.approvers.includes('accounts@ashoka.edu.in')) && txn.approvals==1)
+                if((txn.approvers.includes(accdept_email)) && txn.approvals==1 && ((balanceAmt+proposed_amount)>=0))
                 {
                     txn.approvals=-1;
-                    console.log(`Txn ${txnid} approval count is satisfied thus this trabnsaction is approved!`);
+                    balance[txn.faculty_email_id]=balanceAmt+proposed_amount;
+                    console.log(`Txn ${txnid} approval count is satisfied thus this transaction is approved and balance is updated!`);
                 }
             }
         }
 
         else
         {
-            throw new Error(`Cannot Approve transaction!`);
+            throw new Error(`Error Approving Transaction!`);
         }
 
         await ctx.stub.putState(txnid, Buffer.from(JSON.stringify(txn)));
     }
 
-        
-
-
-
-        
-
-
-
-    }
-
     async QueryTxn(ctx,txnid){
 
+        let cid=new ClientIdentity(ctx.stub);
+        let userid=cid.getID();
+
+        const TxnAsBytes= await ctx.stub.getState(txnID);   
+        //if nothing retrived then throw error 
+        if (!TxnAsBytes || TxnAsBytes.length === 0) 
+        {
+            throw new Error(`${txnid} does not exist`);
+        }
+
+        //converting to JSON object
+        const txn = JSON.parse(TxnAsBytes.toString());
+
+        //a faculty can only see their transaction whereas dor and accounts can see any transaction 
+        if(userid.includes(txn.faculty_email_id) || userid.includes(dor_email) || userid.includes(accdept_email))
+        {
+            console.log(txn);
+            return JSON.stringify(txn);
+        }
+
+        else
+        {
+            throw new Error('Cannot view this transaction')
+            
+        }
     }
 
     async QueryAllTxn(ctx,faculty_emailid="default"){
