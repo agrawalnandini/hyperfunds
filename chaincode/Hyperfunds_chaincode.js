@@ -98,29 +98,45 @@ class Hyperfunds extends Contract
 
              //checking for how many approvals required
              balanceAmt=balance[txn.faculty_email_id];
-             if(txn.proposed_amount>=threshold)
+
+             //if proposal txn made by dor, dont need to check for threshold- just need account's approval
+             if(txn.userID.includes(dor_email))
              {
-                 if((txn.approvers.includes(dor_email) && txn.approvers.includes(accdept_email)) && txn.approvals==2 && ((balanceAmt+proposed_amount)>=0)) 
-                 {
-                     txn.approvals=-1;
-                     balance[txn.faculty_email_id]=balanceAmt+proposed_amount;
-                     console.log(`Txn ${txnid} approval count is satisfied thus this transaction is approved and balance is updated!`);
-                 }
-            }
-            else
-            {
                 if((txn.approvers.includes(accdept_email)) && txn.approvals==1 && ((balanceAmt+proposed_amount)>=0))
                 {
                     txn.approvals=-1;
                     balance[txn.faculty_email_id]=balanceAmt+proposed_amount;
                     console.log(`Txn ${txnid} approval count is satisfied thus this transaction is approved and balance is updated!`);
                 }
-            }
+             }
+
+             else
+             {
+                if(txn.proposed_amount>=threshold)
+                {
+                    if((txn.approvers.includes(dor_email) && txn.approvers.includes(accdept_email)) && txn.approvals==2 && ((balanceAmt+proposed_amount)>=0)) 
+                    {
+                        txn.approvals=-1;
+                        balance[txn.faculty_email_id]=balanceAmt+proposed_amount;
+                        console.log(`Txn ${txnid} approval count is satisfied thus this transaction is approved and balance is updated!`);
+                    }
+               }
+               else
+               {
+                   if((txn.approvers.includes(accdept_email)) && txn.approvals==1 && ((balanceAmt+proposed_amount)>=0))
+                   {
+                       txn.approvals=-1;
+                       balance[txn.faculty_email_id]=balanceAmt+proposed_amount;
+                       console.log(`Txn ${txnid} approval count is satisfied thus this transaction is approved and balance is updated!`);
+                   }
+               }
+             }
+            
         }
 
         else
         {
-            throw new Error(`Error Approving Transaction!`);
+            throw new Error(`Cannot Approve Transaction!`);
         }
 
         await ctx.stub.putState(txnid, Buffer.from(JSON.stringify(txn)));
