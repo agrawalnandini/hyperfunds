@@ -269,18 +269,15 @@ class Hyperfunds extends Contract
 
     }
 
-    async getbalance(){
-    //retrieving the id of the approver: note we are defining the ids
-    let cid = new ClientIdentity(ctx.stub);
-    let approverid = cid.getID();
+    async getbalance(ctx, faculty_email_id){
 
-    //approval cannot come from faculty
-    if((approverid.includes(dor_email)||approverid.includes(accdept_email)||(approverid.includes(faculty_email_id)))==true) {
-        return balance[faculty_email_id];
-    }     
-    else {
-        throw new Error(`Unauthorised access to Balance detected`);
-    }
+        // return balance for the faculty email ID received as argument
+        if(balance.hasOwnProperty(faculty_email_id) && (!faculty_email_id == dor_email) && (!faculty_email_id == accdept_email)) {
+            return balance[faculty_email_id];
+        }     
+        else { // if received email ID is not present in the dictionary, throw an error
+            throw new Error(`Invalid Email ID - not registered as faculty!`);
+        }
     }
 
 }
