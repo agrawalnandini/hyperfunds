@@ -36,18 +36,18 @@ class Hyperfunds extends Contract
             //Obtain current balance for the faculty
             current_balance = balance[userID]
 
-            //Transaction is deducted only if there is sufficient balance
+            //Transaction is accepted only if there is sufficient balance
             if ((current_balance + proposed_amount) >= 0) {
 
                 const approvers = [];
                 const approvals = 0;
 
                 const msg = {
+                    faculty_email_id,
                     proposed_amount,
                     userID,
                     approvals,
                     approvers,
-                    faculty_email_id,
                 };
 
                 // if new faculty, add faculty to balance dictionary
