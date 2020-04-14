@@ -80,7 +80,49 @@ class Hyperfunds extends Contract
 
     }
 
-    async QueryAllTxn(ctx,faculty_emailid="default"){
+    async QueryAllTxn(ctx,input_email='default'){
+        console.info('============= START : queryAllTxns ===========');
+
+        const startKey = '0';
+        const endKey = '99999';
+
+        const iterator = await ctx.stub.getStateByRange(startKey, endKey);
+
+        const allResults = [];
+        while (true) {
+            const res = await iterator.next();
+
+            if (res.value && res.value.value.toString()) {
+                // console.log(res.value.value.toString('utf8'));
+
+                const Key = res.value.key;
+                let txn;
+                try {
+                    txn = JSON.parse(res.value.value.toString('utf8'));
+
+                    // don't show registration $HELLO$ records
+                    if (txn.proposed_amount === 0 || ( (txn.faculty_email_id != input_email) && (input_email != 'default') ) ) {
+                        continue;
+                    }
+
+                    // no need to show these fields anyway
+                    delete msg.userID;
+                    delete msg.approvers;
+                    delete msg.approvals;
+
+                } catch (err) {
+                    console.log(err);
+                    msg = res.value.value.toString('utf8');
+                }
+                allResults.push({Key, msg});
+            }
+            if (res.done) {
+                await iterator.close();
+                console.info(allResults);
+                console.info('============= END : queryAllTxns ===========');
+                return JSON.stringify(allResults);
+            }
+        }
 
     }
 
