@@ -30,10 +30,10 @@ class Hyperfunds extends Contract
 
                     // update balance array and txnID
                     if (prop.amount === "0") {
-                        balance[faculty_email_id] = proposed_amount;
+                        balance[prop.faculty_email_id] = prop.proposed_amount;
                     }
                     else {
-                        balance[faculty_email_id] = balance[faculty_email_id] + proposed_amount;
+                        balance[prop.faculty_email_id] = prop.balance[faculty_email_id] + prop.roposed_amount;
                     }
                 
                     txnID += 1;
@@ -48,7 +48,7 @@ class Hyperfunds extends Contract
                 await iterator.close();
                 console.log(`Balance array: ${balance}`);
                 console.log(`num of faculty members registered: ${balance.length}`);
-                console.log(`Last txn ID: ${txbID}`);
+                console.log(`Last txn ID: ${txnID}`);
                 break;
             }
         }
