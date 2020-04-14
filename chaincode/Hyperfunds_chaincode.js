@@ -109,12 +109,14 @@ class Hyperfunds extends Contract
         else{
             throw new Error('User not allowed to access funds for the given faculty!')
         }
-        console.info('============= END : createMsg ===========');
+        console.info('============= END : CreateProposal ===========');
 
 
     }
 
     async CreateApprovalTxn(ctx,txnid){
+
+        console.info('============= START : CreateApproval ===========');
 
         //retrieving the id of the approver: note we are defining the ids
         let cid=new ClientIdentity(ctx.stub);
@@ -192,9 +194,13 @@ class Hyperfunds extends Contract
         }
 
         await ctx.stub.putState(txnid, Buffer.from(JSON.stringify(txn)));
+        
+        console.info('============= END : CreateApproval ===========');
     }
 
     async QueryTxn(ctx,txnid){
+
+        console.info('============= START : CreateQueryTxn ===========');
 
         let cid=new ClientIdentity(ctx.stub);
         let userid=cid.getID();
@@ -221,6 +227,7 @@ class Hyperfunds extends Contract
             throw new Error('Cannot view this transaction')
             
         }
+        console.info('============= END : CreateQueryTxn ===========');
     }
 
     async QueryAllTxn(ctx,input_email='default'){
@@ -269,8 +276,9 @@ class Hyperfunds extends Contract
 
     }
 
-    async getbalance(ctx, faculty_email_id){
+    async getBalance(ctx, faculty_email_id){
 
+        console.info('============= START : getBalance ===========');
         // return balance for the faculty email ID received as argument
         if(balance.hasOwnProperty(faculty_email_id) && (!faculty_email_id == dor_email) && (!faculty_email_id == accdept_email)) {
             return balance[faculty_email_id];
@@ -278,6 +286,7 @@ class Hyperfunds extends Contract
         else { // if received email ID is not present in the dictionary, throw an error
             throw new Error(`Invalid Email ID - not registered as faculty!`);
         }
+        console.info('============= END : getBalance ===========');
     }
 
 }
