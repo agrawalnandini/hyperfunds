@@ -27,26 +27,44 @@ class Hyperfunds extends Contract
         console.log(`userID  : ${userID}`);
         console.log(`emailID : ${faculty_email_id}`);
 
-        const approvers = [];
-        const approvals = 0;
+        if(userID.includes(faculty_email_id) || userID.includes(/*dor email id*/)) {
+            if(userID.includes(faculty_email_id)){
+                //Faculty is only allowed to deduct funds
+                proposed_amount = proposed_amount * (-1)
+            }
 
-        const msg = {
-            proposed_amount,
-            userID,
-            approvals,
-            approvers,
-            faculty_email_id,
-        };
+            current_balance = balance[userID]
 
-        // if new faculty, add faculty to balance dictionary
-        if (!(balance.includes(faculty_email_id))) {
-            console.log(`New faculty! Added to the chain state.`);
-            balance.faculty_email_id = 0;        //Add to dictionary
+            if ((current_balance + proposed_amount) >= 0) {
+
+                const approvers = [];
+                const approvals = 0;
+
+                const msg = {
+                    proposed_amount,
+                    userID,
+                    approvals,
+                    approvers,
+                    faculty_email_id,
+                };
+
+                // if new faculty, add faculty to balance dictionary
+                if (!(balance.includes(faculty_email_id))) {
+                    console.log(`New faculty! Added to the chain state.`);
+                    balance.faculty_email_id = 0;        //Add to dictionary
+                }
+
+                txnID += 1;
+
+                await ctx.stub.putState(txnID.toString(), Buffer.from(JSON.stringify(msg)));
+            }
+            else{
+                throw new Error('Insufficient Funds!')
+            }
         }
-
-        txnID += 1;
-
-        await ctx.stub.putState(txnID.toString(), Buffer.from(JSON.stringify(msg)));
+        else{
+            throw new Error('User not allowed to access funds for the given faculty!')
+        }
         console.info('============= END : createMsg ===========');
 
 
