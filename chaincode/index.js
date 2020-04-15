@@ -4,7 +4,7 @@
 
 'use strict';
 
-const FabChat = require('./Hyperfunds_chaincode');
+const Hyperfunds = require('./Hyperfunds_chaincode');
 
 module.exports.Hyperfunds = Hyperfunds;
 module.exports.contracts = [ Hyperfunds ];
