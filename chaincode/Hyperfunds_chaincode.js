@@ -231,6 +231,7 @@ class Hyperfunds extends Contract
     }
 
     async QueryAllTxn(ctx,input_email='default'){
+        //this function tries to query all txns or query all txns of a particular faculty
         console.info('============= START : queryAllTxns ===========');
 
         const startKey = '0';
@@ -290,3 +291,5 @@ class Hyperfunds extends Contract
     }
 
 }
+
+module.exports=Hyperfunds;
