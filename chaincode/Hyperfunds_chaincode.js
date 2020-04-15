@@ -280,7 +280,7 @@ class Hyperfunds extends Contract
 
         console.info('============= START : getBalance ===========');
         // return balance for the faculty email ID received as argument
-        if(balance.hasOwnProperty(faculty_email_id) && (!faculty_email_id == dor_email) && (!faculty_email_id == accdept_email)) {
+        if(balance.hasOwnProperty(faculty_email_id)) {
             return balance[faculty_email_id];
         }     
         else { // if received email ID is not present in the dictionary, throw an error
