@@ -230,9 +230,12 @@ class Hyperfunds extends Contract
 		console.info('============= END : CreateQueryTxn ===========');
 	}
 
-	async QueryAllTxn(ctx,input_email='default'){
+	async QueryAllTxn(ctx,input_email='no_input'){
 		//this function tries to query all txns or query all txns of a particular faculty
 		console.info('============= START : queryAllTxns ===========');
+
+        let cid = new ClientIdentity(ctx.stub);
+        let userID = cid.getID();
 
 		const startKey = '0';
 		const endKey = '99999';
@@ -250,21 +253,27 @@ class Hyperfunds extends Contract
 				try {
 					txn = JSON.parse(res.value.value.toString('utf8'));
 
-					// don't show registration $HELLO$ records
-					if (txn.proposed_amount === 0 || ( (txn.faculty_email_id != input_email) && (input_email != 'default') ) ) {
-						continue;
-					}
+					//only txns from input faculty are shown if their is an input for dor and accounts
+                    if ( (userID.includes(dor_email)) || (userID.includes(accdept_email)) ){
+                        if (txn.proposed_amount == 0 || ( (txn.faculty_email_id != input_email) && (input_email != 'no_input') ) ) {
+                            continue;
+                        }
+                    }
+                    //For a faculty user, only txns of that faculty are shown
+                    else if( txn.proposed_amount == 0 || !(userID.includes(txn.faculty_email_id)) ){
+                        continue;
+                    }
 
 					// no need to show these fields anyway
-					delete msg.userID;
-					delete msg.approvers;
-					delete msg.approvals;
+					delete txn.userID;
+					delete txn.approvers;
+					delete txn.approvals;
 
 				} catch (err) {
 					console.log(err);
-					msg = res.value.value.toString('utf8');
+					txn = res.value.value.toString('utf8');
 				}
-				allResults.push({Key, msg});
+				allResults.push({Key, txn});
 			}
 			if (res.done) {
 				await iterator.close();
