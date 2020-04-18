@@ -76,7 +76,7 @@ class Hyperfunds extends Contract
 			}
 
 			//Obtain current balance for the faculty
-			current_balance = balance[userID]
+			current_balance = balance[faculty_email_id]
 
 			//Transaction is accepted only if there is sufficient balance
 			if ((current_balance + proposed_amount) >= 0) {

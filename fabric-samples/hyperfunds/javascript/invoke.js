@@ -8,7 +8,7 @@ const path = require('path');
 const ccpPath = path.resolve(__dirname, '..', '..', 'basic-network', 'connection.json');
 const ccpJSON = fs.readFileSync(ccpPath, 'utf8');
 const ccp = JSON.parse(ccpJSON);
-let user, choice, msg, emailID;
+let user, choice, txn_argument, faculty_emailID;
 
 process.argv.forEach(function (val, index, array) {
     choice = array[2];              // determines which function to call (createProposal or createApproval)
