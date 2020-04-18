@@ -84,7 +84,7 @@ class Hyperfunds extends Contract
 				const approvers = [];
 				const approvals = 0;
 
-				const msg = {
+				const txn = {
 					faculty_email_id,
 					proposed_amount,
 					userID,
@@ -100,7 +100,7 @@ class Hyperfunds extends Contract
 
 				txnID += 1;
 
-				await ctx.stub.putState(txnID.toString(), Buffer.from(JSON.stringify(msg)));
+				await ctx.stub.putState(txnID.toString(), Buffer.from(JSON.stringify(txn)));
 			}
 			else{
 				throw new Error('Insufficient Funds!')
