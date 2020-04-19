@@ -64,6 +64,9 @@ async function main()
         {
             console.log(`Choice ${choice} not valid`);  //if anything except CreateProposalTxn or CreateApprovalTxn is used then prints invalid
         }
+
+        // Disconnect from the gateway.
+        await gateway.disconnect();
     } catch(error) {
         console.error(`Failed to submit transaction: ${error}`);    //if doesnt enter the try block
         process.exit(1);
