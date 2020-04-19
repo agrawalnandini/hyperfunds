@@ -68,7 +68,6 @@ class Hyperfunds extends Contract
 		console.log(`Proposed Amount : ${proposed_amount}`);
 		console.log(`userID  : ${userID}`);
 		console.log(`emailID : ${faculty_email_id}`);
-		console.log(`balance : ${balance[faculty_email_id]}`);
 
 		if(userID.includes(faculty_email_id) || userID.includes(dor_email)) {
 			if(userID.includes(faculty_email_id)){
