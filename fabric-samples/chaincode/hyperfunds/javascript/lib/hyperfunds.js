@@ -180,7 +180,8 @@ class Hyperfunds extends Contract
 
 			 else
 			 {
-				if(txn.proposed_amount>=threshold)
+				 //multiplying with -1 as txn.proposed_amt is negative for faculty proposals
+				if((-1*txn.proposed_amount)>=threshold)
 				{
 					if((txn.approvers.includes(dor_email) && txn.approvers.includes(accdept_email)) && txn.approvals==2 && ((balanceAmt+txn.proposed_amount)>=0)) 
 					{
