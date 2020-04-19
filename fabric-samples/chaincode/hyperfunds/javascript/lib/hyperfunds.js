@@ -121,17 +121,22 @@ class Hyperfunds extends Contract
 
 	async CreateApprovalTxn(ctx,approve_txnid){
 
-		console.log('I am here');
 		console.info('============= START : CreateApproval ===========');
 
 		//retrieving the id of the approver: note we are defining the ids
 		let cid=new ClientIdentity(ctx.stub);
 		let approverid=cid.getID();
-
-		//approval cannot come from faculty
-		if((approverid.includes(dor_email)||approverid.includes(accdept_email))==false)     
-		{
-			throw new Error(`Faculty cannot Approve Transaction!`);
+		
+		//Change approverid to email id of Accounts or DOR
+		if(approverid.includes(dor_email)){
+			approverid = dor_email;
+		}
+		else if(approverid.includes(accdept_email)){
+			approverid = accdept_email;
+		}
+		// Only DOR or Accounts can approve
+		else{
+			throw new Error(`User not allowed to Approve Transactions!`);
 		}
 
 		//getting the current key-value pair we are changing from the worldstate
