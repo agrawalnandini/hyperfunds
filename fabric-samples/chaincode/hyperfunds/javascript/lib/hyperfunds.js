@@ -68,6 +68,7 @@ class Hyperfunds extends Contract
 		console.log(`Proposed Amount : ${proposed_amount}`);
 		console.log(`userID  : ${userID}`);
 		console.log(`emailID : ${faculty_email_id}`);
+		console.log(`balance : ${balance[faculty_email_id]}`);
 
 		if(userID.includes(faculty_email_id) || userID.includes(dor_email)) {
 			if(userID.includes(faculty_email_id)){
@@ -77,6 +78,7 @@ class Hyperfunds extends Contract
 
 			//Obtain current balance for the faculty
 			current_balance = balance[faculty_email_id]
+
 
 			//Transaction is accepted only if there is sufficient balance
 			if ((current_balance + proposed_amount) >= 0) {
