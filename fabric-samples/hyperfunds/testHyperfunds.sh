@@ -42,3 +42,6 @@ node query.js getBalance fac2@ashoka.edu.in fac2@ashoka.edu.in # should be 1,00,
 # approval from dor for this transaction txnid - 3
 node invoke.js CreateApprovalTxn 3 dor@ashoka.edu.in fac2@ashoka.edu.in
 node query.js getBalance fac2@ashoka.edu.in fac2@ashoka.edu.in # should be 50,000
+
+node query.js QueryAllTxn dor@ashoka.edu.in fac1@ashoka.edu.in
+node query.js QueryAllTxn fac2@ashoka.edu.in fac1@ashoka.edu.in
