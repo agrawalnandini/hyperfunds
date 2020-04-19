@@ -210,7 +210,7 @@ class Hyperfunds extends Contract
 		let cid=new ClientIdentity(ctx.stub);
 		let userid=cid.getID();
 
-		const TxnAsBytes= await ctx.stub.getState(txnID);   
+		const TxnAsBytes= await ctx.stub.getState(txnid);   
 		//if nothing retrived then throw error 
 		if (!TxnAsBytes || TxnAsBytes.length === 0) 
 		{
