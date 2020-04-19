@@ -76,18 +76,16 @@ class Hyperfunds extends Contract
 				proposed_amount = proposed_amount * (-1)
 			}
 
+			// if new faculty, add faculty to balance dictionary
+			if (!(balance.hasOwnProperty(faculty_email_id))) {
+				console.log(`Adding ${faculty_email_id} to the chain state...`);
+				balance.faculty_email_id = 0;        //Add to dictionary
+			}
+
 			//Obtain current balance for the faculty
 			
 			let current_balance;	
-
-			if (balance.hasOwnProperty(faculty_email_id)) 
-			{	
-				current_balance = balance[faculty_email_id];
-			}
-			else
-			{
-				current_balance = 0;
-			}
+			current_balance = balance[faculty_email_id];
 
 			//Transaction is accepted only if there is sufficient balance
 			if ((current_balance + proposed_amount) >= 0) {
@@ -102,12 +100,6 @@ class Hyperfunds extends Contract
 					approvals,
 					approvers,
 				};
-
-				// if new faculty, add faculty to balance dictionary
-				if (!(balance.hasOwnProperty(faculty_email_id))) {
-					console.log(`New faculty! Added to the chain state.`);
-					balance.faculty_email_id = 0;        //Add to dictionary
-				}
 
 				txnID += 1;
 				console.log(`Transaction ID: ${txnID}`);
