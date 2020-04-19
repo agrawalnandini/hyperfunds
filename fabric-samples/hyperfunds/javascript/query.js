@@ -58,12 +58,12 @@ async function main() {
 			console.log(`TransactionTypeAll has been evaluated, result is: ${result.toString()}`);
 		} 
 		else if (choice === 'QueryAllTxn') {
-			if(IDoremail === '') {
-				const result = await contract.evaluateTransaction('QueryAllTxn');
+			if(!IDoremail) {
+				const result = await contract.evaluateTransaction('QueryAllTxn','no_input');
 				console.log(`TransactionTypeID has been evaluated, result is: ${result.toString()}`);
 			}
 			else {
-				const result = await contract.evaluateTransaction('queryAllTxns', IDoremail);
+				const result = await contract.evaluateTransaction('QueryAllTxn', IDoremail);
 				console.log(`TransactionTypeID has been evaluated, result is: ${result.toString()}`);
 			}
 		}

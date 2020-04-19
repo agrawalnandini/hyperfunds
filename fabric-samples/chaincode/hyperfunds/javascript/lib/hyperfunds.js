@@ -247,14 +247,13 @@ class Hyperfunds extends Contract
 
 	async QueryAllTxn(ctx,input_email='no_input'){
 		//this function tries to query all txns or query all txns of a particular faculty
-		console.info('============= START : queryAllTxns ===========');
+		console.info('============= START : QueryAllTxn ===========');
 
         let cid = new ClientIdentity(ctx.stub);
         let userID = cid.getID();
 
 		const startKey = '0';
 		const endKey = '99999';
-
 		const iterator = await ctx.stub.getStateByRange(startKey, endKey);
 
 		const allResults = [];
@@ -293,7 +292,7 @@ class Hyperfunds extends Contract
 			if (res.done) {
 				await iterator.close();
 				console.info(allResults);
-				console.info('============= END : queryAllTxns ===========');
+				console.info('============= END : QueryAllTxn ===========');
 				return JSON.stringify(allResults);
 			}
 		}
