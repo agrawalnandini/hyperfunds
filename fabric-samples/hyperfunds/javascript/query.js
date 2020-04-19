@@ -63,6 +63,10 @@ async function main() {
 				console.log(`TransactionTypeID has been evaluated, result is: ${result.toString()}`);
 			}
 			else {
+				if(user != 'dor@ashoka.edu.in' && user != 'accounts@ashoka.edu.in' && IDoremail !=user){
+					console.error(`${user} not allowed to query other users' transactions`);
+					process.exit(1);
+				}
 				const result = await contract.evaluateTransaction('QueryAllTxn', IDoremail);
 				console.log(`TransactionTypeID has been evaluated, result is: ${result.toString()}`);
 			}
