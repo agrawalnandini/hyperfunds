@@ -119,8 +119,9 @@ class Hyperfunds extends Contract
 
 	}
 
-	async CreateApprovalTxn(ctx,txnid){
+	async CreateApprovalTxn(ctx,approve_txnid){
 
+		console.log('I am here');
 		console.info('============= START : CreateApproval ===========');
 
 		//retrieving the id of the approver: note we are defining the ids
@@ -134,12 +135,12 @@ class Hyperfunds extends Contract
 		}
 
 		//getting the current key-value pair we are changing from the worldstate
-		const TxnAsBytes= await ctx.stub.getState(txnID);   
+		const TxnAsBytes= await ctx.stub.getState(approve_txnid);   
 
 		//if nothing retrived then throw error 
 		if (!TxnAsBytes || TxnAsBytes.length === 0) 
 		{
-			throw new Error(`${txnid} does not exist`);
+			throw new Error(`${approve_txnid} does not exist`);
 		}
 
 		//converting to JSON object
@@ -165,7 +166,7 @@ class Hyperfunds extends Contract
 				{
 					txn.approvals=-1;
 					balance[txn.faculty_email_id]=balanceAmt+proposed_amount;
-					console.log(`Txn ${txnid} approval count is satisfied thus this transaction is approved and balance is updated!`);
+					console.log(`Txn ${approve_txnid} approval count is satisfied thus this transaction is approved and balance is updated!`);
 				}
 			 }
 
@@ -177,7 +178,7 @@ class Hyperfunds extends Contract
 					{
 						txn.approvals=-1;
 						balance[txn.faculty_email_id]=balanceAmt+proposed_amount;
-						console.log(`Txn ${txnid} approval count is satisfied thus this transaction is approved and balance is updated!`);
+						console.log(`Txn ${approve_txnid} approval count is satisfied thus this transaction is approved and balance is updated!`);
 					}
 			   }
 			   else
@@ -186,7 +187,7 @@ class Hyperfunds extends Contract
 				   {
 					   txn.approvals=-1;
 					   balance[txn.faculty_email_id]=balanceAmt+proposed_amount;
-					   console.log(`Txn ${txnid} approval count is satisfied thus this transaction is approved and balance is updated!`);
+					   console.log(`Txn ${approve_txnid} approval count is satisfied thus this transaction is approved and balance is updated!`);
 				   }
 			   }
 			 }
@@ -198,23 +199,23 @@ class Hyperfunds extends Contract
 			throw new Error(`Cannot Approve Transaction!`);
 		}
 
-		await ctx.stub.putState(txnid, Buffer.from(JSON.stringify(txn)));
+		await ctx.stub.putState(approve_txnid, Buffer.from(JSON.stringify(txn)));
 		
 		console.info('============= END : CreateApproval ===========');
 	}
 
-	async QueryTxn(ctx,txnid){
+	async QueryTxn(ctx,query_txnid){
 
 		console.info('============= START : CreateQueryTxn ===========');
 
 		let cid=new ClientIdentity(ctx.stub);
 		let userid=cid.getID();
 
-		const TxnAsBytes= await ctx.stub.getState(txnid);   
+		const TxnAsBytes= await ctx.stub.getState(query_txnid);   
 		//if nothing retrived then throw error 
 		if (!TxnAsBytes || TxnAsBytes.length === 0) 
 		{
-			throw new Error(`${txnid} does not exist`);
+			throw new Error(`${query_txnid} does not exist`);
 		}
 
 		//converting to JSON object
