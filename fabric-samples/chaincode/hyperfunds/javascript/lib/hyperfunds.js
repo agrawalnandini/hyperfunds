@@ -65,6 +65,9 @@ class Hyperfunds extends Contract
 		let cid = new ClientIdentity(ctx.stub);
 		let userID = cid.getID();
 
+		//Change proposed_amount variable from string to int
+		proposed_amount = parseInt(proposed_amount);
+
 		console.log(`Proposed Amount : ${proposed_amount}`);
 		console.log(`userID  : ${userID}`);
 		console.log(`emailID : ${faculty_email_id}`);
@@ -108,7 +111,7 @@ class Hyperfunds extends Contract
 			
 			}
 			else{
-				throw new Error('Insufficient Funds!');
+				throw new Error(`Insufficient Funds!`);
 			}
 		}
 		else{
