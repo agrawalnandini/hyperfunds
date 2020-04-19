@@ -8,7 +8,7 @@ const path = require('path');
 const ccpPath = path.resolve(__dirname, '..', '..', 'basic-network', 'connection.json');
 const ccpJSON = fs.readFileSync(ccpPath, 'utf8');
 const ccp = JSON.parse(ccpJSON);
-let user, choice, msg, emailID;
+let user, choice, txn_argument, faculty_emailID;
 
 process.argv.forEach(function (val, index, array) {
     choice = array[2];              // determines which function to call (createProposal or createApproval)
@@ -57,7 +57,7 @@ async function main()
         else if(choice=='CreateApprovalTxn') 
         {
             await contract.submitTransaction('CreateApprovalTxn',txn_argument);     //here txn_argument is txnid
-            console.log(`${choice} Transaction has been submitted`);
+            console.log(`${choice} Transaction has been submitted!`);
         }
         else
         {

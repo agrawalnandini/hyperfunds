@@ -4,7 +4,7 @@ const {Contract} = require('fabric-contract-api');                  //retrieving
 const ClientIdentity = require('fabric-shim').ClientIdentity;       //retrieving ClientIdentity from fabric to use its features
 
 var balance={};     //global dictionary for balance with key:faculty_email and value: account balance
-let txnID=-1;
+var txnID=-1;
 let threshold=40000;    //look into it later! Maybe let the user decide interactively
 let dor_email = "dor@ashoka.edu.in";
 let accdept_email = "accounts@ashoka.edu.in";
@@ -69,18 +69,26 @@ class Hyperfunds extends Contract
 		console.log(`userID  : ${userID}`);
 		console.log(`emailID : ${faculty_email_id}`);
 
-		if(userID.includes(faculty_email_id) || userID.includes(dor_email)) {
+		let current_balance;
+
+		if(userID.includes(faculty_email_id) || userID.includes(dor_email) || userID.includes('admin')) {
 			if(userID.includes(faculty_email_id)){
 				//Faculty is only allowed to deduct funds
-				proposed_amount = proposed_amount * (-1)
+				proposed_amount = parseInt(proposed_amount) * (-1)
 			}
 
 			//Obtain current balance for the faculty
-			current_balance = balance[userID]
+			if (balance.hasOwnProperty(faculty_email_id)) 
+			{	
+				current_balance = balance[faculty_email_id];
+			}
+			else
+			{
+				current_balance = 0;
+			} 
 
 			//Transaction is accepted only if there is sufficient balance
-			if ((current_balance + proposed_amount) >= 0) {
-
+			if ((current_balance + parseInt(proposed_amount)) >= 0) {
 				const approvers = [];
 				const approvals = 0;
 
@@ -93,13 +101,13 @@ class Hyperfunds extends Contract
 				};
 
 				// if new faculty, add faculty to balance dictionary
-				if (!(balance.includes(faculty_email_id))) {
+				if (!balance.hasOwnProperty(faculty_email_id)) {
 					console.log(`New faculty! Added to the chain state.`);
-					balance.faculty_email_id = 0;        //Add to dictionary
+					balance[faculty_email_id] = 0;        //Add to dictionary
 				}
 
 				txnID += 1;
-
+				
 				await ctx.stub.putState(txnID.toString(), Buffer.from(JSON.stringify(txn)));
 			}
 			else{
