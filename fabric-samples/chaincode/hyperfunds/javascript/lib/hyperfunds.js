@@ -77,8 +77,17 @@ class Hyperfunds extends Contract
 			}
 
 			//Obtain current balance for the faculty
-			current_balance = balance[faculty_email_id]
+			
+			let current_balance;	
 
+			if (balance.hasOwnProperty(faculty_email_id)) 
+			{	
+				current_balance = balance[faculty_email_id];
+			}
+			else
+			{
+				current_balance = 0;
+			}
 
 			//Transaction is accepted only if there is sufficient balance
 			if ((current_balance + proposed_amount) >= 0) {
@@ -95,24 +104,27 @@ class Hyperfunds extends Contract
 				};
 
 				// if new faculty, add faculty to balance dictionary
-				if (!(balance.includes(faculty_email_id))) {
+				if (!(balance.hasOwnProperty(faculty_email_id))) {
 					console.log(`New faculty! Added to the chain state.`);
 					balance.faculty_email_id = 0;        //Add to dictionary
 				}
 
 				txnID += 1;
+				console.log(`Transaction ID: ${txnID}`);
+				console.log(`Balance dictionary: ${balance}`);
 
 				await ctx.stub.putState(txnID.toString(), Buffer.from(JSON.stringify(txn)));
+			
 			}
 			else{
-				throw new Error('Insufficient Funds!')
+				throw new Error('Insufficient Funds!');
 			}
 		}
 		else{
 			throw new Error('User not allowed to access funds for the given faculty!')
 		}
 		console.info('============= END : CreateProposal ===========');
-
+		return;
 
 	}
 

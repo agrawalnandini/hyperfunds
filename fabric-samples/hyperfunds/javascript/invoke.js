@@ -52,12 +52,13 @@ async function main()
         if(choice=='CreateProposalTxn')
         {
             await contract.submitTransaction('CreateProposalTxn', txn_argument,faculty_emailID); //here txn_argument is proposed_amount
-            console.log(`${choice} Transaction has been submitted`);
+            console.log(`${choice} Transaction has been submitted!`);
+
         }
         else if(choice=='CreateApprovalTxn') 
         {
             await contract.submitTransaction('CreateApprovalTxn',txn_argument);     //here txn_argument is txnid
-            console.log(`${choice} Transaction has been submitted`);
+            console.log(`${choice} Transaction has been submitted!`);
         }
         else
         {
