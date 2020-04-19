@@ -78,7 +78,7 @@ class Hyperfunds extends Contract
 			// if new faculty, add faculty to balance dictionary
 			if (!(balance.hasOwnProperty(faculty_email_id))) {
 				console.log(`New faculty! Adding ${faculty_email_id} to the chain state...`);
-				balance.faculty_email_id = 0;        //Add to dictionary
+				balance[faculty_email_id] = 0;        //Add to dictionary
 			}
 
 			//Obtain current balance for the faculty
