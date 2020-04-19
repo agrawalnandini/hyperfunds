@@ -53,13 +53,13 @@ async function main() {
 		// ex: ('queryAllTxns') or ('queryAllTxns', 'mahavir.jhawar@ashoka.edu.in')
 		// getBalance - requires 1 argument -  faculty email ID, ex: ('getBalance', 'mahavir.jhawar@ashoka.edu.in')
 		
-		if (choice === 'queryTxn') {
-			const result = await contract.evaluateTransaction('queryTxn', IDoremail);
+		if (choice === 'QueryTxn') {
+			const result = await contract.evaluateTransaction('QueryTxn', IDoremail);
 			console.log(`TransactionTypeAll has been evaluated, result is: ${result.toString()}`);
 		} 
-		else if (choice === 'queryAllTxns') {
+		else if (choice === 'QueryAllTxn') {
 			if(IDoremail === '') {
-				const result = await contract.evaluateTransaction('queryAllTxns');
+				const result = await contract.evaluateTransaction('QueryAllTxn');
 				console.log(`TransactionTypeID has been evaluated, result is: ${result.toString()}`);
 			}
 			else {

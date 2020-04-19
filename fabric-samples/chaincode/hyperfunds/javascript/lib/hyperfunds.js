@@ -157,7 +157,7 @@ class Hyperfunds extends Contract
 			 console.log('Your Approval is Submitted');
 
 			 //checking for how many approvals required
-			 balanceAmt=balance[txn.faculty_email_id];
+			let balanceAmt=balance[txn.faculty_email_id];
 
 			 //if proposal txn made by dor, dont need to check for threshold- just need account's approval
 			 if(txn.userID.includes(dor_email))
