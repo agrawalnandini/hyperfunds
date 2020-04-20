@@ -55,25 +55,25 @@ async function main() {
 		
 		if (choice === 'QueryTxn') {
 			const result = await contract.evaluateTransaction('QueryTxn', IDoremail);
-			console.log(`TransactionTypeAll has been evaluated, result is: ${result.toString()}`);
+			console.log(`Query has been evaluated, result is: ${result.toString()}`);
 		} 
 		else if (choice === 'QueryAllTxn') {
 			if(!IDoremail) {
 				const result = await contract.evaluateTransaction('QueryAllTxn','no_input');
-				console.log(`TransactionTypeID has been evaluated, result is: ${result.toString()}`);
+				console.log(`QueryAll request has been evaluated, result is: ${result.toString()}`);
 			}
 			else {
 				if(user != 'dor@ashoka.edu.in' && user != 'accounts@ashoka.edu.in' && IDoremail !=user){
-					console.error(`${user} not allowed to query other users' transactions`);
+					console.error(`${user} not allowed to query transactions made by other users`);
 					process.exit(1);
 				}
 				const result = await contract.evaluateTransaction('QueryAllTxn', IDoremail);
-				console.log(`TransactionTypeID has been evaluated, result is: ${result.toString()}`);
+				console.log(`QueryAll has been evaluated, result is: ${result.toString()}`);
 			}
 		}
 		else if (choice === 'getBalance') {
 			const result = await contract.evaluateTransaction('getBalance', IDoremail);
-			console.log(`TransactionTypeID has been evaluated, result is: ${result.toString()}`);
+			console.log(`The current balance of ${IDoremail} has been evaluated, result is: ${result.toString()}`);
 		}
 		else {
             console.log(`Choice ${choice} not valid`);  
