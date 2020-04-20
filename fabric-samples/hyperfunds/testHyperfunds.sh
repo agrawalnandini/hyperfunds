@@ -43,5 +43,16 @@ node query.js getBalance fac2@ashoka.edu.in fac2@ashoka.edu.in # should be 1,00,
 node invoke.js CreateApprovalTxn 3 dor@ashoka.edu.in fac2@ashoka.edu.in
 node query.js getBalance fac2@ashoka.edu.in fac2@ashoka.edu.in # should be 50,000
 
-node query.js QueryAllTxn dor@ashoka.edu.in fac1@ashoka.edu.in
+# should return all transactions made by fac1
+node query.js QueryAllTxn dor@ashoka.edu.in fac1@ashoka.edu.in 
+
+# should not return the transactions made by fac1 - should throw an error
 node query.js QueryAllTxn fac2@ashoka.edu.in fac1@ashoka.edu.in
+
+# should return all transactions made only by fac2
+node query.js QueryAllTxn fac2@ashoka.edu.in
+
+# should return the transaction with txnID 2
+node query.js QueryTxn dor@ashoka.edu.in 2
+node query.js QueryTxn accounts@ashoka.edu.in 2
+node query.js QueryTxn fac1@ashoka.edu.in 2
