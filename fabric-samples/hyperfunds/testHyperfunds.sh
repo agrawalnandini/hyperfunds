@@ -56,3 +56,6 @@ node query.js QueryAllTxn fac2@ashoka.edu.in
 node query.js QueryTxn dor@ashoka.edu.in 2
 node query.js QueryTxn accounts@ashoka.edu.in 2
 node query.js QueryTxn fac1@ashoka.edu.in 2
+
+#should return all txns made in the network
+node query.js QueryAllTxn accounts@ashoka.edu.in 
