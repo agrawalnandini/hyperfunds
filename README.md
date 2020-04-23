@@ -1,5 +1,5 @@
 # Hyperfunds
-An application built on Hyperledger Fabric
+A distributed Hyperledger Fabric application made to handle Ashoka University Faculty Research Funds in a secure way. 
 
 ## Introduction
 Universities and organisations across the globe promote top quality research by reserving a large amount of funds received from government, corporations and philanthropists for the purpose. The aim of this project, Hyperfunds, is to ensure that the faculty at Ashoka University spend their fixed reserve of funds reliably with approval from the right parties - usually administrators or supervisors - using hyperledger.
