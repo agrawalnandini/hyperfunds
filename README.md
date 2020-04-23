@@ -193,6 +193,6 @@ This function allows us to query all transactions. A faculty member will only be
 ### getBalance(): 
 
 Multiple other methods update the global dictionary balance_dict. This method returns the balance of a faculty based on the given email ID. We should ensure that the faculty members should not be able to access the balance of other faculty members. A simple pseudocode for this method would be:
-```getBalance(email_ID):
-      return(balance_dict[email_ID])```
+```getBalance(email_ID):```
+	```return(balance_dict[email_ID])```
  
