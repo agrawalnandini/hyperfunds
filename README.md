@@ -93,6 +93,7 @@ The client passes the transaction ID of the transaction that they want to query.
 	
 The command to query a transaction based on txnID is as follows:\
 		`node query.js QueryTxn dor@ashoka.edu.in 2`
+		
 The first argument is the choice of the function in the chaincode (here QueryTxn).
 The second argument is the user ID of the user that is querying.
 The third argument is the transaction ID that we want to query.
@@ -194,5 +195,5 @@ This function allows us to query all transactions. A faculty member will only be
 
 Multiple other methods update the global dictionary balance_dict. This method returns the balance of a faculty based on the given email ID. We should ensure that the faculty members should not be able to access the balance of other faculty members. A simple pseudocode for this method would be:\
 ```getBalance(email_ID):```\
-	```return(balance_dict[email_ID])```
+ &lt;p&gt;```return(balance_dict[email_ID])```
  
