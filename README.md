@@ -1,4 +1,4 @@
-### Hyperfunds
+# Hyperfunds
 A distributed Hyperledger Fabric application made to handle Ashoka University Faculty Research Funds in a secure way. 
 
 ## Project Description:
@@ -11,7 +11,7 @@ In this project, we consider three types of parties -- the faculty, the Accounts
 
 The goal of this project is to ensure that the funds are always spent by the right parties with approvals from the required parties as described in the project description above. We plan to use Hyperledger fabric to achieve the same. Hyperledger also provides immutable storage, that allows us to have a trustworthy record of all the transactions involving the funds.
 
-# Why Blockchain for this project:
+### Why Blockchain for this project:
 
 The Blockchain network establishes trust, accountability and transparency, which are key to our project goal. We want the spending to be as transparent as possible to make sure nobody violates the rules of this system. Having an immutable storage allows accountability of the expenditure and maintains trust between the parties.
 
@@ -29,7 +29,7 @@ The dashboard of the Dean of Research is exactly the same as the Accounts depart
 
 Note: For a proposal, only when the right number of approvals is obtained from the right parties according to the rules (described in the Project Description section), will there be a change in the asset in the chainstate for that transaction. 
 
-# Asset for the application:
+## Asset for the application:
 
 The structure of the asset of our chainstate is as follows:
 
@@ -49,7 +49,7 @@ List of Approvers: This is a list of emails of the approvers i.e. either [Accoun
 
 Email of faculty: The email ID of the faculty member who’s balance is getting updated with this transaction (if approved). 
 
-# Client Side Application Features:
+## Client Side Application Features:
 
 There are javascript files that enable various features for the client-side application. We have described them below:
 
@@ -75,7 +75,7 @@ Using the above commands, we can register the Dean, Accounts and a faculty membe
 3. Query.js 
 This javascript file provides the features to - get balance of a faculty’s account, query transactions based on transaction IDs and query all transactions (all/faculty wise) that have been made. These have been described below: 
 
-# GetBalance -
+### GetBalance -
 (‘getBalance’, Email ID)
 The client can use this to view the current balance of faculty members on all the three dashboards. This functionality will invoke the function getBalance() in the chaincode, which will return the balance of the faculty whose email ID is passed as argument. 
 Note: faculty members will have access to only their current balance, unlike the other two types of users.
@@ -87,7 +87,7 @@ The first argument is the choice of the function in the chaincode (here,  getBal
 The second argument is the user ID of the user that wants to retrieve the balance of a faculty member.
 The third argument is the email of the faculty member whose balance we are retrieving.
 
-# Query - 
+### Query - 
 (‘QueryTxn’, Transaction ID)
 The client passes the transaction ID of the transaction that they want to query. The chaincode has a function query() that will return the right transaction. It is important to note that a faculty member will not be able to query a transaction that has not been made by them. If a faculty member tries to do this, an error should be thrown. However, the Dean of Research and the Accounts department can query and view any transaction by their transaction ID.
 	
@@ -97,7 +97,7 @@ The first argument is the choice of the function in the chaincode (here QueryTxn
 The second argument is the user ID of the user that is querying.
 The third argument is the transaction ID that we want to query.
 
-# Query All -
+### Query All -
 (‘QueryAllTxns’)or (‘QueryAllTxns’, Email ID)
 Using this functionality, the client will be able to view either all transactions that have been made in the network so far or all the transactions made by a certain faculty member so far. Here, it is important to note that using this functionality, a faculty member will only be able to view all the transactions made by them. They will not be able to view all the transactions made by other faculty members. However, the Dean of Research and the Accounts department can query and view all transactions. 
 
@@ -117,7 +117,7 @@ The third argument is the faculty’s email ID whose transactions we are queryin
 4. Invoke.js - 
 This is the javascript file that provides two key features to our application - creating a proposal transaction request for the faculty and creating an approval transaction request for the other two types of users. The types of transactions have been described below --
 
-# Create Proposal Transaction - 
+### Create Proposal Transaction - 
 (‘CreateProposalTransaction’, Proposed amount, Email ID)
 The client passes the proposed amount along with the faculty member’s email ID. This method will send a request from the client side. Every proposal is added to the chainstate as a key-value pair. The transaction will not be processed until it receives enough approvals. 
 
@@ -134,7 +134,7 @@ The second argument is the proposed amount.
 The third argument is the user ID of the user that is creating the transaction.
 The fourth argument is the faculty’s email id whose balance is getting updated.
 
-# Create Approval Transaction -
+### Create Approval Transaction -
 (‘CreateApprovalTransaction’, Transaction_ID)
 The second argument in this transaction is the transaction ID that has to be approved. This will send a request from the client side through the Dean / Accounts department’s ID, and the chaincode will proceed to update the faculty member’s balance only if the approvals meet the conditional requirements as mentioned above.
 The command line to approve transactions is as follows:
@@ -157,7 +157,7 @@ Here are the global variables that we will use in the chaincode:
 
 There are multiple functions that the chaincode for this application will have. Below, we have defined these functions:
 
-# CreateProposalTxn(): 
+### CreateProposalTxn(): 
 
 The list of arguments this method receives are: {Proposed amount, Email ID} of a faculty member. This method will create a proposal transaction with the given Email ID of the faculty member and the proposed amount. Here is the list of things this method will have to do: 
 1. If the user that initiates the transaction is a faculty member (not the Dean of Research or the accounts department), use the negative of the proposed amount as the proposed amount. 
@@ -168,7 +168,7 @@ This is because we only want to allow a faculty member to deduct an amount from 
 4. Assign this transaction a txn_id. 
 5. Create an asset instance (key-value pair) with the txn_id as key and {Faculty ID, Proposed amount, Approval Counter, List of Approvers, Email ID} as value and push it to the chainstate.
 
-# CreateApprovalTxn():
+### CreateApprovalTxn():
 
 The arguments that this method gets are: {Transaction_ID}. This method will invoke a transaction whenever the Accounts department or the Dean of Research approve a transaction on their dashboard. The changes that this method makes to the transaction with Transaction_ID are given below:
 1. Add the approver’s ID to approver_list .
@@ -182,15 +182,15 @@ The arguments that this method gets are: {Transaction_ID}. This method will invo
 7. Update the global balance dictionary balance_dict with the value (Current_Balance + Proposed amount).
 Push updates to the chainstate. 
 
-# QueryTxn():
+### QueryTxn():
 
 This function allows us to query based on the Transaction ID. A faculty member will not be able to query a transaction that has not been made by them. If a faculty member tries to do this, an error should be thrown. However, the Dean of Research and the Accounts department can query and view any transaction by their transaction ID.
 
-# QueryAllTxn():
+### QueryAllTxn():
 
 This function allows us to query all transactions. A faculty member will only be able to view all the transactions made by them. They will not be able to view all the transactions made by other faculty members. However, the Dean of Research and the Accounts department can query all and view all transactions. 
 
-# getBalance(): 
+### getBalance(): 
 
 Multiple other methods update the global dictionary balance_dict. This method returns the balance of a faculty based on the given email ID. We should ensure that the faculty members should not be able to access the balance of other faculty members. A simple pseudocode for this method would be:
 ```getBalance(email_ID):
