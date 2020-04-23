@@ -63,7 +63,7 @@ This javascript file registers users to Hyperfunds. In our project, the Dean of 
 
 Note: The Dean initiates funds to the faculty members’ wallet. This balance is updated on the client side after every successful transaction. It goes without saying that the Accounts department and the Dean will be able to view the updated balance of every faculty. 
 
-The command for registering a user is as follows:
+The command for registering a user is as follows:\
 
 ```
 node registerUser.js dor@ashoka.edu.in
@@ -80,7 +80,7 @@ This javascript file provides the features to - get balance of a faculty’s acc
 The client can use this to view the current balance of faculty members on all the three dashboards. This functionality will invoke the function getBalance() in the chaincode, which will return the balance of the faculty whose email ID is passed as argument. 
 Note: faculty members will have access to only their current balance, unlike the other two types of users.
 
-The command to retrieve balance is as follows: 
+The command to retrieve balance is as follows: \
 `node query.js getBalance fac1@ashoka.edu.in fac1@ashoka.edu.in`
 
 The first argument is the choice of the function in the chaincode (here,  getBalance).
@@ -91,7 +91,7 @@ The third argument is the email of the faculty member whose balance we are retri
 (‘QueryTxn’, Transaction ID)
 The client passes the transaction ID of the transaction that they want to query. The chaincode has a function query() that will return the right transaction. It is important to note that a faculty member will not be able to query a transaction that has not been made by them. If a faculty member tries to do this, an error should be thrown. However, the Dean of Research and the Accounts department can query and view any transaction by their transaction ID.
 	
-The command to query a transaction based on txnID is as follows:
+The command to query a transaction based on txnID is as follows:\
 		`node query.js QueryTxn dor@ashoka.edu.in 2`
 The first argument is the choice of the function in the chaincode (here QueryTxn).
 The second argument is the user ID of the user that is querying.
@@ -101,13 +101,13 @@ The third argument is the transaction ID that we want to query.
 (‘QueryAllTxns’)or (‘QueryAllTxns’, Email ID)
 Using this functionality, the client will be able to view either all transactions that have been made in the network so far or all the transactions made by a certain faculty member so far. Here, it is important to note that using this functionality, a faculty member will only be able to view all the transactions made by them. They will not be able to view all the transactions made by other faculty members. However, the Dean of Research and the Accounts department can query and view all transactions. 
 
-The command to query all transactions made in the network so far are:
+The command to query all transactions made in the network so far are:\
 `node query.js QueryAllTxn accounts@ashoka.edu.in`
 
 The first argument is the choice of the function in the chaincode (here,  QueryAllTxns).
 The second argument is the user ID of the user that is querying. 
 
-The command to query all transactions made by a faculty member in the network so far are:
+The command to query all transactions made by a faculty member in the network so far are:\
 `node query.js QueryAllTxn dor@ashoka.edu.in fac1@ashoka.edu.in`
 		
 The first argument is the choice of the function in the chaincode (here QueryAllTxn).
@@ -125,8 +125,8 @@ The Dean of Research can create a transaction to initiate or add funds to any fa
 
 This function is also used by faculty members to create a transaction and spend their funds. Proposed amount is converted to a negative value within the chaincode in this case, since it has to be subtracted from their existing balance. As also mentioned previously, this transaction would require approvals from the Accounts department and the Dean of Research based on conditions described in the Problem Description section.
 
-The command to create a proposal transaction is as follows:
-`node invoke.js CreateProposalTxn 100000 dor@ashoka.edu.in fac1@ashoka.edu.in`
+The command to create a proposal transaction is as follows:\
+`node invoke.js CreateProposalTxn 100000 dor@ashoka.edu.in fac1@ashoka.edu.in`\
 `node invoke.js CreateProposalTxn 30000 fac1@ashoka.edu.in fac1@ashoka.edu.in`
 
 The first argument is the choice of the function in the chaincode (here, CreateProposalTxn).
@@ -137,7 +137,7 @@ The fourth argument is the faculty’s email id whose balance is getting updated
 ### Create Approval Transaction -
 (‘CreateApprovalTransaction’, Transaction_ID)
 The second argument in this transaction is the transaction ID that has to be approved. This will send a request from the client side through the Dean / Accounts department’s ID, and the chaincode will proceed to update the faculty member’s balance only if the approvals meet the conditional requirements as mentioned above.
-The command line to approve transactions is as follows:
+The command line to approve transactions is as follows:\
 `node invoke.js CreateApprovalTxn 2 accounts@ashoka.edu.in fac1@ashoka.edu.in`
 
 The first argument is the choice of the function in the chaincode (here, CreateApprovalTxn).
@@ -192,7 +192,7 @@ This function allows us to query all transactions. A faculty member will only be
 
 ### getBalance(): 
 
-Multiple other methods update the global dictionary balance_dict. This method returns the balance of a faculty based on the given email ID. We should ensure that the faculty members should not be able to access the balance of other faculty members. A simple pseudocode for this method would be:
-```getBalance(email_ID):```
+Multiple other methods update the global dictionary balance_dict. This method returns the balance of a faculty based on the given email ID. We should ensure that the faculty members should not be able to access the balance of other faculty members. A simple pseudocode for this method would be:\
+```getBalance(email_ID):```\
 	```return(balance_dict[email_ID])```
  
