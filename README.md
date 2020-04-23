@@ -195,5 +195,10 @@ This function allows us to query all transactions. A faculty member will only be
 
 Multiple other methods update the global dictionary balance_dict. This method returns the balance of a faculty based on the given email ID. We should ensure that the faculty members should not be able to access the balance of other faculty members. A simple pseudocode for this method would be:\
 ```getBalance(email_ID):```\
- &lt;p&gt;```return(balance_dict[email_ID])```
+ &lt;p&gt;```return(balance_dict[email_ID])```&lt;/p&gt;
  
+ ## Instructions to Use
+ ./teardownHyperfunds - to tear down the last session in the application \
+ ./startHyperfunds - set up docker containers and the network \
+ ./testHyperfunds - testHyperfunds has some sample commands to test if everything is running well. \
+ ./stopHyperFunds - stop all docker containers and the network from running.
