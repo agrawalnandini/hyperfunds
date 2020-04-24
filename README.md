@@ -1,9 +1,9 @@
 # Hyperfunds
-A distributed Hyperledger Fabric application made to handle Ashoka University Faculty Research Funds in a secure way. 
+A distributed Hyperledger Fabric application made to handle university faculty research funds in a secure way. 
 
 ## Project Description:
 
-Universities and organisations across the globe promote top quality research by reserving a large amount of funds received from government, corporations and philanthropists for the purpose. The aim of this project, Hyperfunds, is to ensure that the faculty at Ashoka University spend their fixed reserve of funds reliably with approval from the right parties - usually administrators or supervisors - using Hyperledger Fabric.
+Universities and organisations across the globe promote top quality research by reserving a large amount of funds received from government, corporations and philanthropists for the purpose. The aim of this project, Hyperfunds, is to ensure that the faculty at a university spend their fixed reserve of funds reliably with approval from the right parties - usually administrators or supervisors - using Hyperledger Fabric.
 
 In this project, we consider three types of parties -- the faculty, the Accounts department, and the Dean of Research. An amount of funds is earmarked for each faculty member every academic year by the Dean of Research. Funds that remain unspent by the end of an academic year do not carry on to the next. If a faculty member has Rs. 1,00,000 in the beginning, every time they want to spend an amount lesser than a fixed threshold, say, x (let x = 40,000 here), they need to get it approved by the Accounts department. However, every time they want to spend an amount that exceeds the x, they would require an approval from the Accounts department as well as the Dean of Research. It is important to note that neither the Accounts department nor the Dean of Research is allowed to spend any of the funds earmarked for faculty. Thus, we also note that, in every spend-request either two of parties (faculty and Accounts department) or all three of the parties are involved (faculty, Accounts department, and the Dean of Research).
 
@@ -17,9 +17,9 @@ The Blockchain network establishes trust, accountability and transparency, which
 
 ## Project Flow and Technical Details:
 
-For the purpose of this project, as the Figure 1 above depicts, we plan to work with a network with one client, one organisation (with one peer) and one OSN. The three types of users -- faculty, Accounts department, and the Dean of Research -- are connected to a central client that sends out all transactions to the network. For now, we are considering only one Accounts department and one Dean of Research at Ashoka. However, the number of faculty users can be as many as we wish to have.
+For the purpose of this project, as the Figure 1 above depicts, we plan to work with a network with one client, one organisation (with one peer) and one OSN. The three types of users -- faculty, Accounts department, and the Dean of Research -- are connected to a central client that sends out all transactions to the network. For now, we are considering only one Accounts department and one Dean of Research at the university. However, the number of faculty users can be as many as we wish to have.
 
-Each user has a dashboard that has functions based on what type of user they are. All users can sign in using their Ashoka email addresses. The Dean of Research and the Accounts department can only register once with predefined email addresses - {dor@ashoka.edu.in, accounts@ashoka.edu.in} to avoid any malicious activity. 
+Each user has a dashboard that has functions based on what type of user they are. All users can sign in using their university email addresses. The Dean of Research and the Accounts department can only register once with predefined email addresses - {dor@ashoka.edu.in, accounts@ashoka.edu.in} to avoid any malicious activity. The 
 
 Each faculty member too can register only once, but their email addresses are not predefined. On registering as a faculty member, a wallet is created. Funds are initiated by the Dean of Research from their dashboard for newly registered faculty members. The faculty dashboard has a provision to request the spending of any amount from their balance funds for research purposes. On sending any of the above two requests, a transaction will be created and sent to the rest of the network through the client. This transaction is also called the ‘proposal transaction’. The only difference between the Dean and faculty members’ proposal transaction is that the Dean’s proposed amount is added to the faculty members’ balance and the faculty’s proposed amount is subtracted from their own balance as they spend money. Additionally, at a later point, we hope to include in the transaction the hash of any document relevant to the proposal -- payment advice, bills, or other proofs of expenditure.
 
@@ -194,8 +194,7 @@ This function allows us to query all transactions. A faculty member will only be
 ### getBalance(): 
 
 Multiple other methods update the global dictionary balance_dict. This method returns the balance of a faculty based on the given email ID. We should ensure that the faculty members should not be able to access the balance of other faculty members. A simple pseudocode for this method would be:\
-```getBalance(email_ID):```\
- &lt;p&gt;```return(balance_dict[email_ID])```&lt;/p&gt;
+```getBalance(email_ID): return(balance_dict[email_ID])```
  
  ## Instructions to Use
  ./teardownHyperfunds - to tear down the last session in the application \
