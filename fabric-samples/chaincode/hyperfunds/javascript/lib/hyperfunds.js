@@ -6,14 +6,18 @@ const ClientIdentity = require('fabric-shim').ClientIdentity;       //retrieving
 var balance={};     //global dictionary for balance with key:faculty_email and value: account balance
 let txnID=-1;
 let threshold=40000;    //look into it later! Maybe let the user decide interactively
-let dor_email = "dor@ashoka.edu.in";
-let accdept_email = "accounts@ashoka.edu.in";
+let dor_email;
+let accdept_email;
 
 class Hyperfunds extends Contract
 {
-	async initLedger(ctx){
+	async initLedger(ctx,dor,accounts){
 	console.info('============= START : Initialize Ledger ===========');
 
+		dor_email=dor;
+		accdept_email=accounts;
+		console.log(`Dor email : ${dor_email}`);
+		console.log(`Accounts email : ${accdept_email}`);
 		const startKey = '0';
 		const endKey = '99999';
 
