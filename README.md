@@ -195,9 +195,17 @@ This function allows us to query all transactions. A faculty member will only be
 
 Multiple other methods update the global dictionary balance_dict. This method returns the balance of a faculty based on the given email ID. We should ensure that the faculty members should not be able to access the balance of other faculty members. A simple pseudocode for this method would be:\
 ```getBalance(email_ID): return(balance_dict[email_ID])```
+
  
- ## Instructions to Use
- ./teardownHyperfunds - to tear down the last session in the application \
- ./startHyperfunds - set up docker containers and the network \
+ # Instructions to Run Hyperfunds's on the command line
+1. Run `./teardownHyperfunds` in `fabric-samples/hyperfunds` - in case you have run Hyperfunds before to remove the created files and stop running docker containers from the last session.
+2. Set up arguments to initLedger as your university's DOR and Accounts email address in `startHyperfunds` in `fabric-samples/hyperfunds`. 
+3. Run `./startHyperfunds` - to set up the network and the docker containers
+4. In `fabric-samples/hyperfunds/javascript`, run ```node enrollAdmin.js```
+5. Now register DOR, accounts, users by running ```node registerUser.js fac1@uni.edu```
+6. Add funds to faculty's accounts from DOR's account using `CreateProposalTxn`.
+7. Create proposals and approvals, query transactions using the descriptions given in the `Chaincode and Chainstate` section as required. 
+
+### Some other executables
  ./testHyperfunds - testHyperfunds has some sample commands to test if everything is running well. \
  ./stopHyperFunds - stop all docker containers and the network from running.
