@@ -19,7 +19,7 @@ The Blockchain network establishes trust, accountability and transparency, which
 
 For the purpose of this project, as the Figure 1 above depicts, we plan to work with a network with one client, one organisation (with one peer) and one OSN. The three types of users -- faculty, Accounts department, and the Dean of Research -- are connected to a central client that sends out all transactions to the network. For now, we are considering only one Accounts department and one Dean of Research at the university. However, the number of faculty users can be as many as we wish to have.
 
-Each user has a dashboard that has functions based on what type of user they are. All users can sign in using their university email addresses. The Dean of Research and the Accounts department can only register once with predefined email addresses - {dor@ashoka.edu.in, accounts@ashoka.edu.in} to avoid any malicious activity. The 
+Each user has a dashboard that has functions based on what type of user they are. All users can sign in using their university email addresses. The Dean of Research and the Accounts department can only register once with predefined email addresses - {dor@uni.edu, accounts@uni.edu} to avoid any malicious activity. The 
 
 Each faculty member too can register only once, but their email addresses are not predefined. On registering as a faculty member, a wallet is created. Funds are initiated by the Dean of Research from their dashboard for newly registered faculty members. The faculty dashboard has a provision to request the spending of any amount from their balance funds for research purposes. On sending any of the above two requests, a transaction will be created and sent to the rest of the network through the client. This transaction is also called the ‘proposal transaction’. The only difference between the Dean and faculty members’ proposal transaction is that the Dean’s proposed amount is added to the faculty members’ balance and the faculty’s proposed amount is subtracted from their own balance as they spend money. Additionally, at a later point, we hope to include in the transaction the hash of any document relevant to the proposal -- payment advice, bills, or other proofs of expenditure.
 
@@ -59,16 +59,16 @@ The command to enroll an Admin is as follows:
 `node enrollAdmin.js`
 
 2. RegisterUser.js
-This javascript file registers users to Hyperfunds. In our project, the Dean of Research and the Accounts department can only register once with pre-specified email IDs -- {dean.research@ashoka.edu.in, accounts@ashoka.edu.in}. Hence, all users are identified as Dean of Research, Accounts, or faculty (not Dean of Research or Accounts) by their email IDs. Any number of faculty members can register with their email IDs.
+This javascript file registers users to Hyperfunds. In our project, the Dean of Research and the Accounts department can only register once with pre-specified email IDs -- {dor@uni.edu, accounts@uni.edu}. Hence, all users are identified as Dean of Research, Accounts, or faculty (not Dean of Research or Accounts) by their email IDs. Any number of faculty members can register with their email IDs.
 
 Note: The Dean initiates funds to the faculty members’ wallet. This balance is updated on the client side after every successful transaction. It goes without saying that the Accounts department and the Dean will be able to view the updated balance of every faculty. 
 
 The command for registering a user is as follows:\
 
 ```
-node registerUser.js dor@ashoka.edu.in
-node registerUser.js accounts@ashoka.edu.in
-node registerUser.js fac1@ashoka.edu.in
+node registerUser.js dor@uni.edu
+node registerUser.js accounts@uni.edu
+node registerUser.js fac1@uni.edu
 ```
 Using the above commands, we can register the Dean, Accounts and a faculty member (fac1). The Dean and the Accounts are identified by the chaincode by their email IDs (since they are pre-specified). 
 
@@ -81,7 +81,7 @@ The client can use this to view the current balance of faculty members on all th
 Note: faculty members will have access to only their current balance, unlike the other two types of users.
 
 The command to retrieve balance is as follows: \
-`node query.js getBalance fac1@ashoka.edu.in fac1@ashoka.edu.in`
+`node query.js getBalance fac1@uni.edu fac1@uni.edu`
 
 The first argument is the choice of the function in the chaincode (here,  getBalance).
 The second argument is the user ID of the user that wants to retrieve the balance of a faculty member.
@@ -92,7 +92,7 @@ The third argument is the email of the faculty member whose balance we are retri
 The client passes the transaction ID of the transaction that they want to query. The chaincode has a function query() that will return the right transaction. It is important to note that a faculty member will not be able to query a transaction that has not been made by them. If a faculty member tries to do this, an error should be thrown. However, the Dean of Research and the Accounts department can query and view any transaction by their transaction ID.
 	
 The command to query a transaction based on txnID is as follows:\
-		`node query.js QueryTxn dor@ashoka.edu.in 2`
+		`node query.js QueryTxn dor@uni.edu 2`
 		
 The first argument is the choice of the function in the chaincode (here QueryTxn).
 The second argument is the user ID of the user that is querying.
@@ -103,13 +103,13 @@ The third argument is the transaction ID that we want to query.
 Using this functionality, the client will be able to view either all transactions that have been made in the network so far or all the transactions made by a certain faculty member so far. Here, it is important to note that using this functionality, a faculty member will only be able to view all the transactions made by them. They will not be able to view all the transactions made by other faculty members. However, the Dean of Research and the Accounts department can query and view all transactions. 
 
 The command to query all transactions made in the network so far are:\
-`node query.js QueryAllTxn accounts@ashoka.edu.in`
+`node query.js QueryAllTxn accounts@uni.edu`
 
 The first argument is the choice of the function in the chaincode (here,  QueryAllTxns).
 The second argument is the user ID of the user that is querying. 
 
 The command to query all transactions made by a faculty member in the network so far are:\
-`node query.js QueryAllTxn dor@ashoka.edu.in fac1@ashoka.edu.in`
+`node query.js QueryAllTxn dor@uni.edu fac1@uni.edu`
 		
 The first argument is the choice of the function in the chaincode (here QueryAllTxn).
 The second argument is the current user ID of the user that is querying.
@@ -127,8 +127,8 @@ The Dean of Research can create a transaction to initiate or add funds to any fa
 This function is also used by faculty members to create a transaction and spend their funds. Proposed amount is converted to a negative value within the chaincode in this case, since it has to be subtracted from their existing balance. As also mentioned previously, this transaction would require approvals from the Accounts department and the Dean of Research based on conditions described in the Problem Description section.
 
 The command to create a proposal transaction is as follows:\
-`node invoke.js CreateProposalTxn 100000 dor@ashoka.edu.in fac1@ashoka.edu.in`\
-`node invoke.js CreateProposalTxn 30000 fac1@ashoka.edu.in fac1@ashoka.edu.in`
+`node invoke.js CreateProposalTxn 100000 dor@uni.edu fac1@uni.edu`\
+`node invoke.js CreateProposalTxn 30000 fac1@uni.edu fac1@uni.edu`
 
 The first argument is the choice of the function in the chaincode (here, CreateProposalTxn).
 The second argument is the proposed amount.
@@ -139,7 +139,7 @@ The fourth argument is the faculty’s email id whose balance is getting updated
 (‘CreateApprovalTransaction’, Transaction_ID)
 The second argument in this transaction is the transaction ID that has to be approved. This will send a request from the client side through the Dean / Accounts department’s ID, and the chaincode will proceed to update the faculty member’s balance only if the approvals meet the conditional requirements as mentioned above.
 The command line to approve transactions is as follows:\
-`node invoke.js CreateApprovalTxn 2 accounts@ashoka.edu.in fac1@ashoka.edu.in`
+`node invoke.js CreateApprovalTxn 2 accounts@uni.edu fac1@uni.edu`
 
 The first argument is the choice of the function in the chaincode (here, CreateApprovalTxn).
 The second argument is the transaction ID of the transaction that has to be approved.
