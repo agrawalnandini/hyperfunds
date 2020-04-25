@@ -222,15 +222,14 @@ iframe {
   color: #fff;
   line-height: 1.2;
   text-align: center;
-
-  display: block;
+  display: inline-block;
   position: absolute;
   width: 100%;
   top: 0;
   left: 0;
   background-color: #b53737;
-  padding-top: 50px;
-  padding-bottom: 39px;
+  padding-top: 0px;
+  padding-bottom: 5px;
 }
 
 /*------------------------------------------------------------------
