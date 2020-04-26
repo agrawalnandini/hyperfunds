@@ -1,4 +1,4 @@
-# Hyperfunds
+# Hyperfunds by Nandini Agrawal, Prashanthi R and Shivam Agarwal
 A distributed Hyperledger Fabric application made to handle university faculty research funds in a secure way. 
 
 ## Project Description:
