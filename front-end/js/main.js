@@ -29,7 +29,7 @@
     function validate (input) {
         if($(input).attr('type') == 'email' || $(input).attr('name') == 'email') 
         {
-            if($(input).val().trim().match(/^([a-zA-Z0-9_\-\.]+)@ashoka.edu.in$/) == null) 
+            if($(input).val().trim().match(/^([a-zA-Z0-9_\-\.]+)@uni.edu$/) == null) 
             {
                 return false;
             }
