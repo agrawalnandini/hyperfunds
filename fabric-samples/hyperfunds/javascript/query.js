@@ -10,6 +10,8 @@ const ccp = JSON.parse(ccpJSON);
 let choice;
 let user;
 let IDoremail;
+let dor_email= 'dor@uni.edu';
+let accounts_email='accounts@uni.edu';
 
 process.argv.forEach(function (val, index, array) {
 	choice = array[2];		// determines which function to call (query or queryAll or getBalance)
@@ -63,7 +65,7 @@ async function main() {
 				console.log(`QueryAll request has been evaluated, result is: ${result.toString()}`);
 			}
 			else {
-				if(user != 'dor@ashoka.edu.in' && user != 'accounts@ashoka.edu.in' && IDoremail !=user){
+				if(user != dor_email && user != accounts_email && IDoremail !=user){
 					console.error(`${user} not allowed to query transactions made by other users`);
 					process.exit(1);
 				}
