@@ -212,7 +212,7 @@ Multiple other methods update the global dictionary balance_dict. This method re
  ./stopHyperFunds - stop all docker containers and the network from running.
  
 # Contact Information
-### You can report any bugs to or get clarifications from any of the three of us:
-#### Nandini Agrawal (nandini.agrawal_ug20@ashoka.edu.in)
-#### Prashanthi R (prashanthi.r_ug20@ashoka.edu.in)
-#### Shivam Agarwal (shivam.agarwal_ug20@ashoka.edu.in)
+You can report any bugs to or get clarifications from any of the three of us:
+Nandini Agrawal (nandini.agrawal_ug20@ashoka.edu.in)
+Prashanthi R (prashanthi.r_ug20@ashoka.edu.in)
+Shivam Agarwal (shivam.agarwal_ug20@ashoka.edu.in)
