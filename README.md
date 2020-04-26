@@ -1,5 +1,5 @@
 # Hyperfunds 
-A distributed Hyperledger Fabric application made to handle university faculty research funds in a secure way. \
+A distributed Hyperledger Fabric application made to handle university faculty research funds in a secure way.
 
 The contributors of this project are Nandini Agrawal, Prashanthi R and Shivam Agarwal.
 
