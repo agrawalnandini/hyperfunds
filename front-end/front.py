@@ -40,6 +40,10 @@ def getbalance():
 def query_email():
     return render_template('%s.html' % 'query_email')
 
+@app.route('/query_txnid.html')
+def query_txnid():
+    return render_template('%s.html' % 'query_txnid')
+
 @app.route('/query.html')
 def query():
     return render_template('%s.html' % 'query')
