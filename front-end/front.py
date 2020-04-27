@@ -33,8 +33,8 @@ def Approval():
     return render_template('%s.html' % 'Approval')
 
 @app.route('/getbalance.html')
-def getbalance_admin():
-    return render_template('%s.html' % 'getbalance_admin')
+def getbalance():
+    return render_template('%s.html' % 'getbalance')
 
 @app.route('/query_email.html')
 def query_email():
@@ -43,6 +43,7 @@ def query_email():
 @app.route('/query.html')
 def query():
     return render_template('%s.html' % 'query')
+
 
 
 if __name__ == '__main__':
