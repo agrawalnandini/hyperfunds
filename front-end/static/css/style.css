@@ -128,6 +128,37 @@ main {
   transform: rotate(-180deg);
 }
 
+.menu-query {
+  width: 100%;
+}
+
+.menu-query:last-child {
+  margin-top: auto;
+}
+
+.dropdown-query {
+  display: none;
+  background-color:  var(--bg-primary);
+  min-width: 160px;
+  z-index: 1;
+}
+.dropdown-query a {
+  color: white;
+  position: relative; left: 100px;
+  padding: 12 px 16 px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-query a:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+.menu-query:hover .dropdown-query {
+  display:block;
+}
+
 /* Small screens */
 @media only screen and (max-width: 600px) {
   .navbar {
