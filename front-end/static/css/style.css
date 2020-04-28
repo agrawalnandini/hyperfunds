@@ -144,7 +144,8 @@ main {
 }
 .dropdown-query a {
   color: white;
-  position: relative; left: 100px;
+  position: relative; 
+  left: 80px;
   padding: 12 px 16 px;
   text-decoration: none;
   display: block;
