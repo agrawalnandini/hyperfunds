@@ -20,17 +20,18 @@
 		<img src="../static/icon/image.jpeg" id="bg" alt="">
 		<div class="container-login100">
 			<div class="wrap-login100">
-				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
+				<form method="post" class="login100-form p-l-55 p-r-55 p-t-178">
 					<span class="login100-form-title">
                         <img src="../static/icon/logo.png" style="width:250px;height:250px;">
 					</span>
 
-					<div class="wrap-input100 validate-input m-b-16" data-validate="Register with your university email id">
+					<div class="wrap-input100 m-b-16" required
+					pattern="[a-z0-9._%+-]+@(([a-z0-9._%+-]+\.uni\.edu\)|(uni\.edu\))">
 						<input class="input100" type="text" name="email" placeholder="Email">
 						<span class="focus-input100"></span>
 					</div>
 
-					<div class="wrap-input100 validate-input" data-validate = "Please enter password">
+					<!-- <div class="wrap-input100 validate-input" data-validate = "Please enter password">
 						<input class="input100" type="password" name="pass" placeholder="Password">
 						<span class="focus-input100"></span>
                     </div>
@@ -39,16 +40,16 @@
 						<input class="input100" type="password" name="confpass" placeholder="Confirm Password">
 						<span class="focus-input100"></span>
                     </div>
-                    </br>
+                    </br> -->
 					
 					<div class="container-signup100-form-btn">
-						<button class="login100-form-btn">
+						<button type= "submit" class="login100-form-btn">
 							Sign up
                         </button>
                     </div>
 
 					<div class="flex-col-c p-t-80 p-b-40">
-						<a href="index.html" class="txt3">
+						<a href="{{ url_for('login') }}" class="txt3">
 							Already have an account?
                         </a>
 					</div>
@@ -66,6 +67,5 @@
 	<script src="{{ url_for('static',filename='../static/vendor/daterangepicker/moment.min.js')}}"></script>
 	<script src="{{ url_for('static',filename='../static/vendor/daterangepicker/daterangepicker.js')}}"></script>
 	<script src="{{ url_for('static',filename='../static/vendor/countdowntime/countdowntime.js')}}"></script>
-	<script src="js/main.js"></script>
 </body>
 </html>
