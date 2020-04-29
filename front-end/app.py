@@ -1,6 +1,7 @@
 from flask import Flask, render_template,Response,request,redirect
 import flask_login
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin
+from flask_user import roles_required
 import utils
 import os
 import json
@@ -19,8 +20,8 @@ app.config['SECRET_KEY'] = "hyperfunds"
 db_path = "db.json"
 user_dict = {}
 if os.path.isfile(db_path):
-    db_content = utils.read_file(db_path)
-    user_dict = json.loads(db_content)
+    with open('db.json') as json_file: 
+        user_dict = json.load(json_file)
     used_wallets = []
     # update available wallets
     for k, v in user_dict.items():
@@ -33,6 +34,8 @@ FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/j
 NODE_PATH = "/usr/local/bin/node"
 DEBUG = True
 SEND_OTP = True
+dor_email='dor@uni.edu'
+accounts_email='accounts@uni.edu'
 
 def handle_setup(req_obj, flag):
     uid = req_obj['email']
@@ -80,6 +83,14 @@ def registerUser(user):
     else:
         return 1
 
+def check_dashboard(email):
+    if email==dor_email:
+        return '/dor_home'
+    elif email==accounts_email:
+        return '/accounts_home'
+    else:
+        return '/faculty_home'
+
 @login_manager.user_loader
 def load_user(user_id):
     return User(user_id)
@@ -88,22 +99,25 @@ def load_user(user_id):
 class User(UserMixin):
     def __init__(self, id):
         self.id = id
+    #     self.roles='Faculty'
+    # if id==dor_email:
+    #     self.roles='dor'
+    # elif id==accounts_email:
+    #     self.roles='accounts'
 
 
 @app.route('/')
-@app.route('/index')
 def login():
     return render_template('%s.html' % 'index')
 
-@app.route('/')
-@app.route('/index',methods=['POST'])
+@app.route('/',methods=['POST'])
 def login_post():
-    if request.form['email'] in user_dict and user_dict[request.form['email']]['pass'] == request.form['pass']:
+    print('in here')
+    if request.form['email'] in user_dict and user_dict[request.form['email']]['pwd'] == request.form['pass']:
         login_user(User(request.form['email']))
+        return redirect(check_dashboard(request.form['email']))
     else:
         return render_template('response.html', response="Invalid email/password!")
-
-
 
 @app.route('/signup', methods=['POST'])
 def signup_post():
@@ -119,7 +133,7 @@ def signup_post():
 def signup():
     return render_template('%s.html' % 'signup')
 
-@login_required
+@roles_required('dor')
 @app.route('/dor_home')
 def dor_home():
     return render_template('%s.html' % 'dor_home')
@@ -129,7 +143,7 @@ def dor_home():
 def faculty_home():
     return render_template('%s.html' % 'faculty_home')
 
-@login_required
+@roles_required('accounts')
 @app.route('/accounts_home')
 def accounts_home():
     return render_template('%s.html' % 'accounts_home')
