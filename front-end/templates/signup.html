@@ -43,7 +43,7 @@
                     </br> -->
 					
 					<div class="container-signup100-form-btn">
-						<button type= "submit" class="login100-form-btn">
+						<button type= "submit" class="login100-form-btn" onclick= "popUp();">
 							Sign up
                         </button>
                     </div>
@@ -57,8 +57,18 @@
 			</div>
 		</div>
 	</div>
+
+	<script>
+		function popUp(){
+			Swal.fire({
+  				title: "<i>Registeration</i>", 
+  				html: "Testing popup",  
+  				confirmButtonText: "Go back to<u>Signup</u>", 
+			});
+		}
+	</script>
 	
-	
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 	<script src="{{ url_for('static',filename='../static/vendor/jquery/jquery-3.2.1.min.js')}}"></script>
 	<script src="{{ url_for('static',filename='../static/vendor/animsition/js/animsition.min.js')}}"></script>
 	<script src="{{ url_for('static',filename='../static/vendor/bootstrap/js/popper.js')}}"></script>
