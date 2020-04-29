@@ -7,6 +7,7 @@ import json
 import getpass
 import random
 import string
+import subprocess
 
 app = Flask(__name__)
 
@@ -17,19 +18,18 @@ app.config['SECRET_KEY'] = "hyperfunds"
 
 db_path = "db.json"
 user_dict = {}
-available_wallets = [x for x in range(1, 10000)]
 if os.path.isfile(db_path):
     db_content = utils.read_file(db_path)
     user_dict = json.loads(db_content)
     used_wallets = []
     # update available wallets
     for k, v in user_dict.items():
-        used_wallets.append(int(v["wallet"][4:]))
-    available_wallets = list(set(available_wallets) - set(used_wallets))
+        used_wallets.append(k)
+    
 else:
     utils.write_file(db_path, "{}")
 
-FABRIC_DIR = "/Desktop/hyperfunds" + getpass.getuser() + "/fabric-samples/hyperfunds/javascript/"
+FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
 NODE_PATH = "/usr/local/bin/node"
 DEBUG = True
 SEND_OTP = True
@@ -41,7 +41,7 @@ def handle_setup(req_obj, flag):
     if flag == "True":
         # if user already exists, fail
         # if no more wallets available, fail
-        if uid in user_dict or not available_wallets:
+        if uid in user_dict:
             utils.send_verification_email(uid, user_dict[uid]['pwd'])
             return 1
 
@@ -53,30 +53,30 @@ def handle_setup(req_obj, flag):
             if SEND_OTP:
                 if utils.send_verification_email(uid, pwd) == 1:
                     return 1
-            wallet_id = random.choice(available_wallets)
-            available_wallets.remove(wallet_id)
-            user_dict[uid] = {"pwd": pwd, "wallet": "user" + str(wallet_id)}
+            user_dict[uid] = {"pwd": pwd, "wallet":uid}
             if registerUser(user_dict[uid]['wallet']) != 0:
                 user_dict.pop(uid)
-                available_wallets.append(wallet_id)
                 return 1
             utils.write_file(db_path, json.dumps(user_dict))
             return 0
+
     
 def registerUser(user):
+    #returns 0 on success
     output = "dummy"
 
-    try:
-        output = subprocess.check_output(
-            [NODE_PATH, FABRIC_DIR + "registerUser.js", user]).decode().split()
-    except:
-        pass
+    #try:
+        #subprocess.call("cd "+FABRIC_DIR,shell=True)
+    output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/registerUser.js", user]).decode().split()
+    #except:
+    #    pass
 
     if DEBUG:
         print(' '.join(output))
 
     if output != "dummy" and output[len(output) - 1] == "wallet":
         return 0
+    
     else:
         return 1
 
