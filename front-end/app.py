@@ -65,11 +65,11 @@ def registerUser(user):
     #returns 0 on success
     output = "dummy"
 
-    #try:
+    try:
         #subprocess.call("cd "+FABRIC_DIR,shell=True)
-    output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/registerUser.js", user]).decode().split()
-    #except:
-    #    pass
+        output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/registerUser.js", user],cwd=FABRIC_DIR).decode().split()
+    except:
+        pass
 
     if DEBUG:
         print(' '.join(output))
