@@ -13,7 +13,7 @@
   <nav class="navbar">
     <ul class="navbar-nav">
       <li class="logo">
-        <a href="dashboard_faculty.html" class="nav-link">
+        <a href="{{url_for('faculty_home')}}" class="nav-link">
           <span class="link-text logo-text">Hyperfunds</span>
           <svg
             aria-hidden="true"
@@ -42,7 +42,7 @@
       </li>
 
       <li class="nav-item">
-        <a href="Proposal.html" class="nav-link">
+        <a href="{{url_for('Proposal')}}" class="nav-link">
           <svg
             aria-hidden="true"
             focusable="false"
@@ -64,7 +64,7 @@
       </li>
 
       <li class="nav-item">
-        <a href="getbalance.html" class="nav-link">
+        <a href="{{url_for('getbalance')}}" class="nav-link">
           <svg
             aria-hidden="true"
             focusable="false"
@@ -107,15 +107,15 @@
           <span class="link-text">View my Transactions</span>
            </a>
           <div class="dropdown-query">
-           <a href="query_txnid.html"> <i class="fa fa-arrow-circle-right" style="font-size:24px"></i>   Using Transaction ID </a>
-          <a href="query.html"> <i class="fa fa-arrow-circle-right" style="font-size:24px"></i>    All transactions </a>
+           <a href="{{url_for('query_txnid')}}"> <i class="fa fa-arrow-circle-right" style="font-size:24px"></i>   Using Transaction ID </a>
+          <a href="{{url_for('query')}}"> <i class="fa fa-arrow-circle-right" style="font-size:24px"></i>    All transactions </a>
         </div>
         </div>
        
       </li>
 
       <li class="nav-item">
-        <a href="login.html" class="nav-link">
+        <a href="{{url_for('logout')}}" class="nav-link">
           <svg
             aria-hidden="true"
             focusable="false"

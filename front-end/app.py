@@ -1,4 +1,4 @@
-from flask import Flask, render_template,Response,request,redirect
+from flask import Flask, render_template,Response,request,redirect,session
 import flask_login
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin
 import utils
@@ -90,44 +90,39 @@ def registerUser(user):
     else:
         return 1
 
-# def check_dashboard(email):
-#     if email==dor_email:
-#         return '/dor_home'
-#     elif email==accounts_email:
-#         return '/accounts_home'
-#     else:
-#         return '/faculty_home'
+def check_dashboard(email):
+    if email==dor_email:
+        return '/dor_home'
+    elif email==accounts_email:
+        return '/accounts_home'
+    else:
+        return '/faculty_home'
 
 @login_manager.user_loader
 def load_user(user_id):
     return User(user_id)
 
 
-
 class User(UserMixin):
     def __init__(self, id,access=ACCESS['faculty']):
         self.id = id
-        self.access=access
-    
-    # def is_dor(self):
-    #     return self.access == ACCESS['dor']
-    
-    # def is_accounts(self):
-    #     return self.access == ACCESS['accounts']
+        if id==dor_email:
+            self.access=ACCESS['dor']
+        elif id==accounts_email:
+            self.access=ACCESS['accounts']
+        else:
+            self.access=ACCESS['faculty']
     
         
 def requires_access_level(access_level):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            if not session.get('email'):
+            if not session.get('email'):    #checks fo 
                 return redirect(url_for('login'))
-
-            user = User.find_by_email(session['email'])
-            print(user)
-            print(user.access)
+            user = load_user(session['email'])
             if user.access!=access_level:
-                return render_template('response.html', response="User not authorized")
+                return render_template('response.html', response="Operation not authorized")
             return f(*args, **kwargs)
         return decorated_function
     return decorator
@@ -139,15 +134,10 @@ def login():
 @app.route('/',methods=['POST'])
 def login_post():
     if request.form['email'] in user_dict and user_dict[request.form['email']]['pwd'] == request.form['pass']:
-        if request.form['email']==dor_email:
-            login_user(User(request.form['email'],ACCESS['dor']))
-            return redirect('/dor_home')
-        elif request.form['email']==accounts_email:
-            login_user(User(request.form['email'],ACCESS['accounts']))
-            return redirect('/accounts_home')
-        else:
-            login_user(User(request.form['email'],ACCESS['faculty']))
-            return redirect('/faculty_home')  
+        session['email']=request.form['email']
+        login_user(User(request.form['email']))
+        return redirect(check_dashboard(request.form['email']))
+
     else:
         return render_template('response.html', response="Invalid email/password!")
 
@@ -165,48 +155,59 @@ def signup_post():
 def signup():
     return render_template('%s.html' % 'signup')
 
-
+@app.route('/logout/')
+@login_required
+def logout():
+    logout_user()
+    return redirect('/')
 
 @app.route('/dor_home')
-@login_required
 @requires_access_level(ACCESS['dor'])
+@login_required
 def dor_home():
     return render_template('%s.html' % 'dor_home')
 
 
 @app.route('/faculty_home')
+@requires_access_level(ACCESS['faculty'])
 @login_required
 def faculty_home():
     return render_template('%s.html' % 'faculty_home')
 
 
 @app.route('/accounts_home')
-@login_required
 @requires_access_level(ACCESS['accounts'])
+@login_required
 def accounts_home():
     return render_template('%s.html' % 'accounts_home')
 
 @app.route('/Proposal')
+@login_required
 def Proposal():
     return render_template('%s.html' % 'Proposal')
 
 @app.route('/Approval')
+@login_required
 def Approval():
     return render_template('%s.html' % 'Approval')
 
 @app.route('/getbalance')
+@login_required
 def getbalance():
     return render_template('%s.html' % 'getbalance')
 
 @app.route('/query_email')
+@login_required
 def query_email():
     return render_template('%s.html' % 'query_email')
 
 @app.route('/query_txnid')
+@login_required
 def query_txnid():
     return render_template('%s.html' % 'query_txnid')
 
 @app.route('/query')
+@login_required
 def query():
     return render_template('%s.html' % 'query')
 
