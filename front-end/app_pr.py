@@ -146,6 +146,29 @@ def getBalance(req_obj):
     else:
         return "Error in evaluating request!"
 
+def createApproval(req_obj):
+    userid = req_obj['userid']
+    
+    if userid!=session['email']:
+        return 1
+    
+    fac_email=req_obj['email']
+    output = "error"
+
+    try:
+        output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/query.js", "QueryAllTxn", user_dict[userid]["wallet"]],
+                 cwd=FABRIC_DIR).decode().split()
+    except:
+        pass
+
+    if DEBUG:
+        print(' '.join(output))
+
+    if output != "dummy":#and 'result' in output:
+        return output
+    else:
+        return "error"
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -247,6 +270,12 @@ def Proposal_post():
 @login_required
 def Approval():
     return render_template('%s.html' % 'Approval')
+
+@app.route('/Approval',methods=['POST'])
+def Approval_post():
+    check=createApproval(request.form)
+    return render_template('response.html',response=check)
+
 
 @app.route('/getbalance')
 @login_required

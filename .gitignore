@@ -5,4 +5,5 @@ fabric-samples/basic-network/config
 fabric-samples/basic-network/crypto-config
 front-end/hyperfunds_service.txt
 front-end/virtual-env
+front-end/db.json
 
