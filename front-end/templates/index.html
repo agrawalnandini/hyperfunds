@@ -14,6 +14,10 @@
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='../static/vendor/daterangepicker/daterangepicker.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='../static/css/util.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='../static/css/main.css')}}">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script src="{{ url_for('static', filename='../static/index.js') }}"></script> -->
+
 </head>
 <body>
 	<div class="limiter">
@@ -62,9 +66,21 @@
 						</a>
 					</div>
 				</form>
+				<div class="alert-box">
+					{% with messages= get_flashed_messages()%}
+					{% if messages %}
+						{% for message in messages%}
+						<div class="alert alert-danger alert-dismissible" role="alert">
+							<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+							<strong>{{message}}</strong>
+						</div>
+						{% endfor %}
+					{% endif %}
+					{% endwith %}	
+				</div>
 			</div>
 		</div>
-	</div>
+	</div>	
 	
 	
 	<script src="{{ url_for('static',filename='../static/vendor/jquery/jquery-3.2.1.min.js')}}"></script>

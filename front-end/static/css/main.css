@@ -345,6 +345,10 @@ iframe {
   background-color: #6e0a05;
 }
 
+.alert-box{
+    height: 1000px; /* Changed this height */
+    padding-bottom:60px;
+}
 
 /*------------------------------------------------------------------
 [ Alert validate ]*/

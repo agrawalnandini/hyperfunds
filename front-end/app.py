@@ -1,4 +1,4 @@
-from flask import Flask, render_template,Response,request,redirect,session
+from flask import Flask, render_template,Response,request,redirect,session,flash
 import flask_login
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin
 import utils
@@ -9,7 +9,7 @@ import random
 import string
 import subprocess
 from functools import wraps
-from flask import url_for,session
+from flask import url_for,session,jsonify
 
 app = Flask(__name__)
 
@@ -163,17 +163,18 @@ def login_post():
         login_user(User(request.form['email']))
         return redirect(check_dashboard(request.form['email']))
     else:
-        return render_template('response.html', response="Invalid email/password!")
+        flash('Incorrect email/password')
+        return redirect('/')
 
 @app.route('/signup', methods=['POST'])
 def signup_post():
     res = handle_setup(request.form, "True")
     if res == 0:
-        return render_template('response.html',
-                               response="Registration successful! Check your email inbox/spam for password.")
+        flash('Registration successful! Check your email inbox/spam for password','success')
+        return redirect('/')
     else:
-        return render_template('response.html',
-                               response="Registration failed! You're already registered. Check your email's inbox/spam folder for password.")
+        flash('Registration failed! You are already registered','error')
+        return redirect('/signup')
 
 @app.route('/signup')
 def signup():
@@ -211,12 +212,15 @@ def Proposal():
     return render_template('%s.html' % 'Proposal')
 
 @app.route('/Proposal',methods=['POST'])
+@login_required
 def Proposal_post():
     check=createProposal(request.form)
     if check==0:
-        return render_template('response.html',response="Transaction is submitted successfully")
+        flash('Transaction is submitted successfully','success')
+        return redirect('/Proposal')
     else:
-         return render_template('response.html',response="Error in submitting transaction")
+        flash('Error in submitting transaction','error')
+        return redirect('/Proposal')
 
 
 @app.route('/Approval')

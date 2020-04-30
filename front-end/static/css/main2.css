@@ -132,6 +132,12 @@ iframe {
 	border: none !important;
 }
 
+.alert-box{
+  height: 1000px; /* Changed this height */
+  padding-bottom:60px;
+  position: relative;
+  padding: 200px;
+}
 
 
 
