@@ -1,7 +1,6 @@
 from flask import Flask, render_template,Response,request,redirect
 import flask_login
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin
-from flask_user import roles_required
 import utils
 import os
 import json
@@ -9,6 +8,8 @@ import getpass
 import random
 import string
 import subprocess
+from functools import wraps
+from flask import url_for,session
 
 app = Flask(__name__)
 
@@ -36,6 +37,12 @@ DEBUG = True
 SEND_OTP = True
 dor_email='dor@uni.edu'
 accounts_email='accounts@uni.edu'
+
+ACCESS = {
+    'dor': 0,
+    'accounts': 1,
+    'faculty': 2
+}
 
 def handle_setup(req_obj, flag):
     uid = req_obj['email']
@@ -83,28 +90,47 @@ def registerUser(user):
     else:
         return 1
 
-def check_dashboard(email):
-    if email==dor_email:
-        return '/dor_home'
-    elif email==accounts_email:
-        return '/accounts_home'
-    else:
-        return '/faculty_home'
+# def check_dashboard(email):
+#     if email==dor_email:
+#         return '/dor_home'
+#     elif email==accounts_email:
+#         return '/accounts_home'
+#     else:
+#         return '/faculty_home'
 
 @login_manager.user_loader
 def load_user(user_id):
     return User(user_id)
 
 
-class User(UserMixin):
-    def __init__(self, id):
-        self.id = id
-    #     self.roles='Faculty'
-    # if id==dor_email:
-    #     self.roles='dor'
-    # elif id==accounts_email:
-    #     self.roles='accounts'
 
+class User(UserMixin):
+    def __init__(self, id,access=ACCESS['faculty']):
+        self.id = id
+        self.access=access
+    
+    # def is_dor(self):
+    #     return self.access == ACCESS['dor']
+    
+    # def is_accounts(self):
+    #     return self.access == ACCESS['accounts']
+    
+        
+def requires_access_level(access_level):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not session.get('email'):
+                return redirect(url_for('login'))
+
+            user = User.find_by_email(session['email'])
+            print(user)
+            print(user.access)
+            if user.access!=access_level:
+                return render_template('response.html', response="User not authorized")
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 
 @app.route('/')
 def login():
@@ -112,10 +138,16 @@ def login():
 
 @app.route('/',methods=['POST'])
 def login_post():
-    print('in here')
     if request.form['email'] in user_dict and user_dict[request.form['email']]['pwd'] == request.form['pass']:
-        login_user(User(request.form['email']))
-        return redirect(check_dashboard(request.form['email']))
+        if request.form['email']==dor_email:
+            login_user(User(request.form['email'],ACCESS['dor']))
+            return redirect('/dor_home')
+        elif request.form['email']==accounts_email:
+            login_user(User(request.form['email'],ACCESS['accounts']))
+            return redirect('/accounts_home')
+        else:
+            login_user(User(request.form['email'],ACCESS['faculty']))
+            return redirect('/faculty_home')  
     else:
         return render_template('response.html', response="Invalid email/password!")
 
@@ -133,18 +165,24 @@ def signup_post():
 def signup():
     return render_template('%s.html' % 'signup')
 
-@roles_required('dor')
+
+
 @app.route('/dor_home')
+@login_required
+@requires_access_level(ACCESS['dor'])
 def dor_home():
     return render_template('%s.html' % 'dor_home')
 
-@login_required
+
 @app.route('/faculty_home')
+@login_required
 def faculty_home():
     return render_template('%s.html' % 'faculty_home')
 
-@roles_required('accounts')
+
 @app.route('/accounts_home')
+@login_required
+@requires_access_level(ACCESS['accounts'])
 def accounts_home():
     return render_template('%s.html' % 'accounts_home')
 
