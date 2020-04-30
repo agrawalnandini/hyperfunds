@@ -98,6 +98,31 @@ def check_dashboard(email):
     else:
         return '/faculty_home'
 
+def createProposal(req_obj):
+    #0 for success
+    userid = req_obj['userid']
+    if userid!=session['email']:
+        return 1
+    
+    amt = req_obj['amount']
+    fac_email=req_obj['email']
+
+    output = "error"
+
+    try:
+        output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/invoke.js", "CreateProposalTxn", amt, user_dict[userid]["wallet"],fac_email],
+                 cwd=FABRIC_DIR).decode().split()
+    except:
+        pass
+
+    if DEBUG:
+        print(' '.join(output))
+
+    if output != "dummy" and output[len(output) - 1] == "submitted!":
+        return 0
+    else:
+        return 1
+
 @login_manager.user_loader
 def load_user(user_id):
     return User(user_id)
@@ -112,14 +137,14 @@ class User(UserMixin):
             self.access=ACCESS['accounts']
         else:
             self.access=ACCESS['faculty']
-    
+
         
 def requires_access_level(access_level):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            if not session.get('email'):    #checks fo 
-                return redirect(url_for('login'))
+            # if not session.get('email'):    #checks fo 
+            #     return redirect(url_for('login'))
             user = load_user(session['email'])
             if user.access!=access_level:
                 return render_template('response.html', response="Operation not authorized")
@@ -137,7 +162,6 @@ def login_post():
         session['email']=request.form['email']
         login_user(User(request.form['email']))
         return redirect(check_dashboard(request.form['email']))
-
     else:
         return render_template('response.html', response="Invalid email/password!")
 
@@ -162,22 +186,22 @@ def logout():
     return redirect('/')
 
 @app.route('/dor_home')
-@requires_access_level(ACCESS['dor'])
 @login_required
+@requires_access_level(ACCESS['dor'])
 def dor_home():
     return render_template('%s.html' % 'dor_home')
 
 
 @app.route('/faculty_home')
-@requires_access_level(ACCESS['faculty'])
 @login_required
+@requires_access_level(ACCESS['faculty'])
 def faculty_home():
     return render_template('%s.html' % 'faculty_home')
 
 
 @app.route('/accounts_home')
-@requires_access_level(ACCESS['accounts'])
 @login_required
+@requires_access_level(ACCESS['accounts'])
 def accounts_home():
     return render_template('%s.html' % 'accounts_home')
 
@@ -185,6 +209,15 @@ def accounts_home():
 @login_required
 def Proposal():
     return render_template('%s.html' % 'Proposal')
+
+@app.route('/Proposal',methods=['POST'])
+def Proposal_post():
+    check=createProposal(request.form)
+    if check==0:
+        return render_template('response.html',response="Transaction is submitted successfully")
+    else:
+         return render_template('response.html',response="Error in submitting transaction")
+
 
 @app.route('/Approval')
 @login_required
