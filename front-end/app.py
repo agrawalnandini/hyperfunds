@@ -100,9 +100,7 @@ def check_dashboard(email):
 
 def createProposal(req_obj):
     #0 for success
-    userid = req_obj['userid']
-    if userid!=session['email']:
-        return 1
+    userid = session['email']
     
     amt = req_obj['amount']
     fac_email=req_obj['email']
@@ -118,7 +116,7 @@ def createProposal(req_obj):
     if DEBUG:
         print(' '.join(output))
 
-    if output != "dummy" and output[len(output) - 1] == "submitted!":
+    if output != "error" and output[len(output) - 1] == "submitted!":
         return 0
     else:
         return 1
@@ -234,11 +232,8 @@ def query_all_txn(user):
         return output
 
 def getBalance(req_obj):
-    #0 for success
-    userid = req_obj['userid']
-    if userid!=session['email']:
-        return 1
-    
+    #-1 for failure
+    userid = session['email']
     fac_email=req_obj['email']
 
     output = "error"
@@ -252,10 +247,10 @@ def getBalance(req_obj):
     if DEBUG:
         print(' '.join(output))
 
-    if output != "dummy" and 'result' in output:
-        return ' '.join(output)
+    if output != "error" and 'result' in output:
+        return output[len(output)-1]
     else:
-        return "Error in evaluating request!"
+        return -1
 
 def approve_txn(user, txnid):
     #returns 1 on failure
@@ -271,7 +266,7 @@ def approve_txn(user, txnid):
     if DEBUG:
         print(' '.join(output))
 
-    if output != "approval unsuccessful" and output[len(output) - 1] == "submitted!":
+    if output != "approval unsuccessful" and output[len(output) - 2] == "!":
         return 0
     
     else:
@@ -296,7 +291,7 @@ def signup_post():
     res = handle_setup(request.form, "True")
     if res == 0:
         flash('Registration successful! Check your email inbox/spam for password','success')
-        return redirect('/')
+        return redirect('/signup')
     else:
         flash('Registration failed! You are already registered','error')
         return redirect('/signup')
@@ -351,12 +346,14 @@ def Proposal_post():
 @app.route('/Approval')
 @login_required
 def Approval():
+    '''
     #Query all transactions
     transactions = query_all_txn(session["email"])
     to_approve = []
     for txn in transactions:
         if (txn["txn"]["approvals"] != (-1) and session["email"] not in txn["txn"]["approvers"] ):
             to_approve.append(txn)
+            '''
     return render_template('%s.html' % 'Approval')
 
 @app.route('/Approval', methods=['POST'])
@@ -379,8 +376,14 @@ def getbalance():
 
 @app.route('/getbalance',methods=['POST'])
 def getbalance_post():
-    check=getBalance(request.form)
-    return render_template('response.html',response=check)
+    bal=getBalance(request.form)
+    if bal==-1:
+        flash('Error in finding balance','error')
+        return redirect('/getbalance')
+    else:
+        flash('Balance is '+bal,'success')
+        return redirect('/getbalance')
+       
 
 @app.route('/query_email')
 @login_required

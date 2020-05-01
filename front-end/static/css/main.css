@@ -197,6 +197,7 @@ iframe {
 
 .wrap-login100 {
   width: 400px;
+  height: 620px;
   background: #fff;
   border-radius: 20px;
   overflow: hidden;
@@ -346,9 +347,10 @@ iframe {
 }
 
 .alert-box{
-    height: 1000px; /* Changed this height */
-    padding-bottom:60px;
+  height: 1000px; /* Changed this height */
+  position: relative;
 }
+
 
 /*------------------------------------------------------------------
 [ Alert validate ]*/

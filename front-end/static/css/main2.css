@@ -134,9 +134,7 @@ iframe {
 
 .alert-box{
   height: 1000px; /* Changed this height */
-  padding-bottom:60px;
-  position: relative;
-  padding: 200px;
+  position: absolute;
 }
 
 
@@ -187,6 +185,7 @@ iframe {
 
 .wrap-contact100 {
   width: 1163px;
+  height: 650px;
   background: #000000;
   border-radius: 10px;
   overflow: hidden;
