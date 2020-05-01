@@ -2,7 +2,6 @@
 ./startHyperfunds.sh
 
 cd javascript
-node enrollAdmin.js
 node registerUser.js dor@uni.edu
 node registerUser.js accounts@uni.edu
 node registerUser.js fac1@uni.edu
