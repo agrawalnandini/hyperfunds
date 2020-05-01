@@ -153,7 +153,7 @@ def requires_access_level(access_level):
     return decorator
 
 def query_by_txnid(user, txnid):
-    #returns 0 on failure
+    #returns 1 on failure
     output = "query by txn_id unsuccessful"
 
     try:
@@ -174,14 +174,14 @@ def query_by_txnid(user, txnid):
         print(' '.join(output))
 
     if output == "query by txn_id unsuccessful":
-        return 0
+        return 1
     
     else:
         return output
 
 def query_by_email(user, email):
-    #returns 0 on failure
-    output = "query by txn_id unsuccessful"
+    #returns 0 on success
+    output = "query by txn_email unsuccessful"
 
     try:
         #subprocess.call("cd "+FABRIC_DIR,shell=True)
@@ -200,11 +200,82 @@ def query_by_email(user, email):
     if DEBUG:
         print(output)
 
-    if output == "query by txn_id unsuccessful":
+    if output != "query by txn_email unsuccessful" and output[len(output) - 1] == "submitted!":
         return 0
     
     else:
+        return 1
+
+def query_all_txn(user):
+    #returns 1 on failure
+    output = "query by txn_all unsuccessful"
+
+    try:
+        #subprocess.call("cd "+FABRIC_DIR,shell=True)
+        output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/query.js", "QueryAllTxn", user],cwd=FABRIC_DIR).decode()
+        #Looking for index where list starts
+        keyword_before_dict = "result is: "
+        start_of_dict_index = output.find(keyword_before_dict) + len(keyword_before_dict)
+        #Use only the list part of the string
+        output = output[start_of_dict_index:]
+        #Convert string to list
+        output = eval(output)
+    
+    except:
+        pass
+
+    if DEBUG:
+        print(output)
+
+    if output == "query by txn_all unsuccessful":
+        return 1
+    
+    else:
         return output
+
+def getBalance(req_obj):
+    #0 for success
+    userid = req_obj['userid']
+    if userid!=session['email']:
+        return 1
+    
+    fac_email=req_obj['email']
+
+    output = "error"
+
+    try:
+        output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/query.js", "getBalance", user_dict[userid]["wallet"],fac_email],
+                 cwd=FABRIC_DIR).decode().split()
+    except:
+        pass
+
+    if DEBUG:
+        print(' '.join(output))
+
+    if output != "dummy" and 'result' in output:
+        return ' '.join(output)
+    else:
+        return "Error in evaluating request!"
+
+def approve_txn(user, txnid):
+    #returns 1 on failure
+    output = "approval unsuccessful"
+
+    try:
+        #subprocess.call("cd "+FABRIC_DIR,shell=True)
+        output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/invoke.js", "CreateApprovalTxn", txnid, user],cwd=FABRIC_DIR).decode()
+
+    except:
+        pass
+
+    if DEBUG:
+        print(' '.join(output))
+
+    if output != "approval unsuccessful" and output[len(output) - 1] == "submitted!":
+        return 0
+    
+    else:
+        return 1
 
 @app.route('/')
 def login():
@@ -280,12 +351,36 @@ def Proposal_post():
 @app.route('/Approval')
 @login_required
 def Approval():
+    #Query all transactions
+    transactions = query_all_txn(session["email"])
+    to_approve = []
+    for txn in transactions:
+        if (txn["txn"]["approvals"] != (-1) and session["email"] not in txn["txn"]["approvers"] ):
+            to_approve.append(txn)
     return render_template('%s.html' % 'Approval')
+
+@app.route('/Approval', methods=['POST'])
+@login_required
+def Approval_post():
+    check = approve_txn(session["email"], request.form["txnid"])
+    if check==0:
+        flash('Transaction is approved successfully','success')
+        return redirect('/Approval')
+    else:
+        flash('Error in approving transaction','error')
+        return redirect('/Approval')
+
+
 
 @app.route('/getbalance')
 @login_required
 def getbalance():
     return render_template('%s.html' % 'getbalance')
+
+@app.route('/getbalance',methods=['POST'])
+def getbalance_post():
+    check=getBalance(request.form)
+    return render_template('response.html',response=check)
 
 @app.route('/query_email')
 @login_required
@@ -313,7 +408,8 @@ def query_txnid_post():
 @app.route('/query')
 @login_required
 def query():
-    return render_template('%s.html' % 'query')
+    res = query_all_txn(session["email"])
+    return render_template('response.html',response=res)
 
 
 
