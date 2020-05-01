@@ -152,6 +152,60 @@ def requires_access_level(access_level):
         return decorated_function
     return decorator
 
+def query_by_txnid(user, txnid):
+    #returns 0 on failure
+    output = "query by txn_id unsuccessful"
+
+    try:
+        #subprocess.call("cd "+FABRIC_DIR,shell=True)
+        output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/query.js", "QueryTxn", user, txnid],cwd=FABRIC_DIR).decode()
+        #Looking for index where dictionary starts
+        keyword_before_dict = "result is: "
+        start_of_dict_index = output.find(keyword_before_dict) + len(keyword_before_dict)
+        #Use only the dictionary part of the string
+        output = output[start_of_dict_index:]
+        #Convert string to dictionary
+        output = eval(output)
+
+    except:
+        pass
+
+    if DEBUG:
+        print(' '.join(output))
+
+    if output == "query by txn_id unsuccessful":
+        return 0
+    
+    else:
+        return output
+
+def query_by_email(user, email):
+    #returns 0 on failure
+    output = "query by txn_id unsuccessful"
+
+    try:
+        #subprocess.call("cd "+FABRIC_DIR,shell=True)
+        output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/query.js", "QueryAllTxn", user, email],cwd=FABRIC_DIR).decode()
+        #Looking for index where list starts
+        keyword_before_dict = "result is: "
+        start_of_dict_index = output.find(keyword_before_dict) + len(keyword_before_dict)
+        #Use only the list part of the string
+        output = output[start_of_dict_index:]
+        #Convert string to list
+        output = eval(output)
+    
+    except:
+        pass
+
+    if DEBUG:
+        print(output)
+
+    if output == "query by txn_id unsuccessful":
+        return 0
+    
+    else:
+        return output
+
 @app.route('/')
 def login():
     return render_template('%s.html' % 'index')
@@ -238,10 +292,23 @@ def getbalance():
 def query_email():
     return render_template('%s.html' % 'query_email')
 
+@app.route('/query_email', methods=['POST'])
+@login_required
+def query_email_post():
+    res = query_by_email(session["email"], request.form["email"])
+    print(res)
+    return render_template('response.html',response=res)
+
 @app.route('/query_txnid')
 @login_required
 def query_txnid():
     return render_template('%s.html' % 'query_txnid')
+
+@app.route('/query_txnid', methods=['POST'])
+@login_required
+def query_txnid_post():
+    res = query_by_txnid(session["email"], request.form["txnid"])
+    return render_template('response.html',response=res)
 
 @app.route('/query')
 @login_required
