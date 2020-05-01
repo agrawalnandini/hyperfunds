@@ -28,7 +28,7 @@ docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/g
 sleep 10
 docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp" cli peer chaincode invoke -o orderer.example.com:7050 -C mychannel -n hyperfunds -c '{"function":"initLedger","Args":["dor@uni.edu", "accounts@uni.edu"]}'
 
-cd javascript
+cd ../hyperfunds/javascript
 node enrollAdmin.js
 
 # cd /home/r/PycharmProjects/fabchat_flask_server
