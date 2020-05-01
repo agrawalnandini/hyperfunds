@@ -282,11 +282,6 @@ class Hyperfunds extends Contract
                         continue;
                     }
 
-					// no need to show these fields anyway
-					delete txn.userID;
-					delete txn.approvers;
-					delete txn.approvals;
-
 				} catch (err) {
 					console.log(err);
 					txn = res.value.value.toString('utf8');
