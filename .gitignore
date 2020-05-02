@@ -8,4 +8,4 @@ front-end/virtual-env
 front-end/db.json
 front-end/app_shivam.py
 front-end/__pycache__
-
+front-end/templates/table.html
