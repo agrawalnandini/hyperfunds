@@ -1,4 +1,4 @@
-from flask import Flask, render_template,Response,request,redirect,session
+from flask import Flask, render_template,Response,request,redirect,session,flash
 import flask_login
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin
 import utils
@@ -9,7 +9,9 @@ import random
 import string
 import subprocess
 from functools import wraps
-from flask import url_for,session
+from flask import url_for,session,jsonify
+from flask_table import Table, Col, ButtonCol
+import fileinput
 
 app = Flask(__name__)
 
@@ -30,6 +32,7 @@ if os.path.isfile(db_path):
     
 else:
     utils.write_file(db_path, "{}")
+
 
 FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
 NODE_PATH = "/usr/bin/node"
@@ -75,8 +78,11 @@ def registerUser(user):
     #returns 0 on success
     output = "dummy"
 
-    output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/registerUser.js", user],cwd=FABRIC_DIR).decode().split()
-
+    try:
+        #subprocess.call("cd "+FABRIC_DIR,shell=True)
+        output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/registerUser.js", user],cwd=FABRIC_DIR).decode().split()
+    except:
+        pass
 
     if DEBUG:
         print(' '.join(output))
@@ -95,12 +101,9 @@ def check_dashboard(email):
     else:
         return '/faculty_home'
 
-
 def createProposal(req_obj):
     #0 for success
-    userid = req_obj['userid']
-    if userid!=session['email']:
-        return 1
+    userid = session['email']
     
     amt = req_obj['amount']
     fac_email=req_obj['email']
@@ -116,59 +119,10 @@ def createProposal(req_obj):
     if DEBUG:
         print(' '.join(output))
 
-    if output != "dummy" and output[len(output) - 1] == "submitted!":
+    if output != "error" and output[len(output) - 1] == "submitted!":
         return 0
     else:
         return 1
-
-
-def getBalance(req_obj):
-    #0 for success
-    userid = req_obj['userid']
-    if userid!=session['email']:
-        return 1
-    
-    fac_email=req_obj['email']
-
-    output = "error"
-
-    try:
-        output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/query.js", "getBalance", user_dict[userid]["wallet"],fac_email],
-                 cwd=FABRIC_DIR).decode().split()
-    except:
-        pass
-
-    if DEBUG:
-        print(' '.join(output))
-
-    if output != "dummy" and 'result' in output:
-        return ' '.join(output)
-    else:
-        return "Error in evaluating request!"
-
-def createApproval(req_obj):
-    userid = req_obj['userid']
-    
-    if userid!=session['email']:
-        return 1
-    
-    fac_email=req_obj['email']
-    output = "error"
-
-    try:
-        output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/query.js", "QueryAllTxn", user_dict[userid]["wallet"]],
-                 cwd=FABRIC_DIR).decode().split()
-    except:
-        pass
-
-    if DEBUG:
-        print(' '.join(output))
-
-    if output != "dummy":#and 'result' in output:
-        return output
-    else:
-        return "error"
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -199,6 +153,128 @@ def requires_access_level(access_level):
         return decorated_function
     return decorator
 
+def query_by_txnid(user, txnid):
+    #returns 1 on failure
+    output = "query by txn_id unsuccessful"
+
+    try:
+        #subprocess.call("cd "+FABRIC_DIR,shell=True)
+        output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/query.js", "QueryTxn", user, txnid],cwd=FABRIC_DIR).decode()
+        #Looking for index where dictionary starts
+        keyword_before_dict = "result is: "
+        start_of_dict_index = output.find(keyword_before_dict) + len(keyword_before_dict)
+        #Use only the dictionary part of the string
+        output = output[start_of_dict_index:]
+        #Convert string to dictionary
+        output = eval(output)
+
+    except:
+        pass
+
+    if DEBUG:
+        print(' '.join(output))
+
+    if output == "query by txn_id unsuccessful":
+        return 1
+    
+    else:
+        return output
+
+def query_by_email(user, email):
+    #returns 0 on success
+    output = "query by txn_email unsuccessful"
+
+    try:
+        #subprocess.call("cd "+FABRIC_DIR,shell=True)
+        output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/query.js", "QueryAllTxn", user, email],cwd=FABRIC_DIR).decode()
+        #Looking for index where list starts
+        keyword_before_dict = "result is: "
+        start_of_dict_index = output.find(keyword_before_dict) + len(keyword_before_dict)
+        #Use only the list part of the string
+        output = output[start_of_dict_index:]
+        #Convert string to list
+        output = eval(output)
+    
+    except:
+        pass
+
+    if DEBUG:
+        print(output)
+
+    if output != "query by txn_email unsuccessful" and output[len(output) - 1] == "submitted!":
+        return 0
+    
+    else:
+        return 1
+
+def query_all_txn(user):
+    #returns 1 on failure
+    output = "query by txn_all unsuccessful"
+
+    try:
+        #subprocess.call("cd "+FABRIC_DIR,shell=True)
+        output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/query.js", "QueryAllTxn", user],cwd=FABRIC_DIR).decode()
+        #Looking for index where list starts
+        keyword_before_dict = "result is: "
+        start_of_dict_index = output.find(keyword_before_dict) + len(keyword_before_dict)
+        #Use only the list part of the string
+        output = output[start_of_dict_index:]
+        #Convert string to list
+        output = eval(output)
+    
+    except:
+        pass
+
+    if DEBUG:
+        print(output)
+
+    if output == "query by txn_all unsuccessful":
+        return 1
+    
+    else:
+        return output
+
+def getBalance(req_obj):
+    #-1 for failure
+    userid = session['email']
+    fac_email=req_obj['email']
+
+    output = "error"
+
+    try:
+        output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/query.js", "getBalance", user_dict[userid]["wallet"],fac_email],
+                 cwd=FABRIC_DIR).decode().split()
+    except:
+        pass
+
+    if DEBUG:
+        print(' '.join(output))
+
+    if output != "error" and 'result' in output:
+        return output[len(output)-1]
+    else:
+        return -1
+
+def approve_txn(user, txnid):
+    #returns 1 on failure
+    output = "approval unsuccessful"
+
+    try:
+        #subprocess.call("cd "+FABRIC_DIR,shell=True)
+        output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/invoke.js", "CreateApprovalTxn", txnid, user],cwd=FABRIC_DIR).decode()
+
+    except:
+        pass
+
+    if DEBUG:
+        print(' '.join(output))
+
+    if output != "approval unsuccessful" and output[len(output) - 2] == "!":
+        return 0
+    
+    else:
+        return 1
+
 @app.route('/')
 def login():
     return render_template('%s.html' % 'index')
@@ -210,17 +286,18 @@ def login_post():
         login_user(User(request.form['email']))
         return redirect(check_dashboard(request.form['email']))
     else:
-        return render_template('response.html', response="Invalid email/password!")
+        flash('Incorrect email/password')
+        return redirect('/')
 
 @app.route('/signup', methods=['POST'])
 def signup_post():
     res = handle_setup(request.form, "True")
     if res == 0:
-        return render_template('response.html',
-                               response="Registration successful! Check your email inbox/spam for password.")
+        flash('Registration successful! Check your email inbox/spam for password','success')
+        return redirect('/signup')
     else:
-        return render_template('response.html',
-                               response="Registration failed! You're already registered. Check your email's inbox/spam folder for password.")
+        flash('Registration failed! You are already registered','error')
+        return redirect('/signup')
 
 @app.route('/signup')
 def signup():
@@ -258,23 +335,94 @@ def Proposal():
     return render_template('%s.html' % 'Proposal')
 
 @app.route('/Proposal',methods=['POST'])
+@login_required
 def Proposal_post():
     check=createProposal(request.form)
     if check==0:
-        return render_template('response.html',response="Transaction is submitted successfully")
+        flash('Transaction is submitted successfully','success')
+        return redirect('/Proposal')
     else:
-         return render_template('response.html',response="Error in submitting transaction")
+        flash('Error in submitting transaction','error')
+        return redirect('/Proposal')
+
+
+class ApprovalsTable(Table):
+    classes=["table", "table-bordered"]
+    txnID = Col('TransactionID')
+    fac_email = Col('Faculty EmailID')
+    amt = Col('Amount')
+    userID = Col('User')
+    approvals = Col('Number of approvals')
+    approvers = Col('Approvers')
+    approve_button = ButtonCol('Approve transaction', button_attrs={'class': "contact100-form-btn", 'name': 'txnid', 'value': ""}, endpoint='table_approve')
 
 
 @app.route('/Approval')
 @login_required
 def Approval():
-    return render_template('%s.html' % 'Approval')
+    #Query all transactions
+    transactions = query_all_txn(session["email"])
+    to_approve = []
+    transaction_ids = []
+    for txn in transactions:
+        if (txn["txn"]["approvals"] != (-1) and session["email"] not in txn["txn"]["approvers"] ):
+            unapproved_txn = {}
+            unapproved_txn["txnID"] = txn["Key"]
+            unapproved_txn["fac_email"] = txn["txn"]["faculty_email_id"]
+            unapproved_txn["amt"] = txn["txn"]["proposed_amount"]
+          
+            if dor_email in txn["txn"]["userID"]:
+                unapproved_txn["userID"] = dor_email
+            else: 
+                unapproved_txn["userID"] = txn["txn"]["faculty_email_id"]
 
-@app.route('/Approval',methods=['POST'])
-def Approval_post():
-    check=createApproval(request.form)
-    return render_template('response.html',response=check)
+            unapproved_txn["approvals"] = txn["txn"]["approvals"]
+            unapproved_txn["approvers"] = txn["txn"]["approvers"]
+            unapproved_txn["approve_button"] = txn["Key"]
+            transaction_ids.append(txn["Key"])
+            to_approve.append(unapproved_txn)
+
+    table = ApprovalsTable(to_approve)
+    print(table.txnID[0])
+    f = open('templates/table_rough.html', 'a')
+    f.write('\n'+str(table.__html__()))
+    with open('templates/extra.html') as g: 
+        w = g.readlines()
+    for line in w:
+        f.write(str(line))
+    f.close()
+    g.close()
+
+    f = open("templates/table_rough.html", 'r')
+    g = open("templates/table.html", 'w+')    
+    i = 0
+    for l in f:
+        x = l
+        if(i<len(transaction_ids)):
+            p = "value="+"\""+ transaction_ids[i]+"\""
+        print(p)
+        l = l.replace("value=\"\"", p)
+        g.write(l)
+        if(x!=l):
+            i=i+1
+    
+    return redirect('/table')
+
+@app.route('/table')
+@login_required
+def table():
+    return render_template('table.html')
+
+@app.route('/table_approve', methods=['POST'])
+@login_required
+def table_approve():
+    check = approve_txn(session["email"], request.form["txnid"])
+    if check==0:
+        flash('Transaction has been approved successfully','success')
+        return redirect('/table')
+    else:
+        flash('Error in approving transaction','error')
+        return redirect('/table')
 
 
 @app.route('/getbalance')
@@ -284,26 +432,44 @@ def getbalance():
 
 @app.route('/getbalance',methods=['POST'])
 def getbalance_post():
-    check=getBalance(request.form)
-    return render_template('response.html',response=check)
-
+    bal=getBalance(request.form)
+    if bal==-1:
+        flash('Error in finding balance','error')
+        return redirect('/getbalance')
+    else:
+        flash('Balance is '+bal,'success')
+        return redirect('/getbalance')
+       
 
 @app.route('/query_email')
 @login_required
 def query_email():
     return render_template('%s.html' % 'query_email')
 
+@app.route('/query_email', methods=['POST'])
+@login_required
+def query_email_post():
+    res = query_by_email(session["email"], request.form["email"])
+    print(res)
+    return render_template('response.html',response=res)
+
 @app.route('/query_txnid')
 @login_required
 def query_txnid():
     return render_template('%s.html' % 'query_txnid')
 
+@app.route('/query_txnid', methods=['POST'])
+@login_required
+def query_txnid_post():
+    res = query_by_txnid(session["email"], request.form["txnid"])
+    return render_template('response.html',response=res)
+
 @app.route('/query')
 @login_required
 def query():
-    return render_template('%s.html' % 'query')
-
+    res = query_all_txn(session["email"])
+    return render_template('response.html',response=res)
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
