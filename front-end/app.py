@@ -202,7 +202,7 @@ def query_by_email(user, email):
         return 0
     
     else:
-        return 1
+        return output
 
 def query_all_txn(user):
     #returns 1 on failure
@@ -279,6 +279,7 @@ def login():
 @app.route('/',methods=['POST'])
 def login_post():
     if request.form['email'] in user_dict and user_dict[request.form['email']]['pwd'] == request.form['pass']:
+        session.pop('email',None)
         session['email']=request.form['email']
         login_user(User(request.form['email']))
         return redirect(check_dashboard(request.form['email']))
@@ -303,6 +304,7 @@ def signup():
 @app.route('/logout/')
 @login_required
 def logout():
+    session.pop('email',None)
     logout_user()
     return redirect('/')
 
