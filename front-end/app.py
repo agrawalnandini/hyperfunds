@@ -34,16 +34,17 @@ else:
     utils.write_file(db_path, "{}")
 
 
-# FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
-# NODE_PATH = "/usr/bin/node"
+FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
+NODE_PATH = "/usr/bin/node"
 
-FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
-NODE_PATH = "/usr/local/bin/node"
+# FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
+# NODE_PATH = "/usr/local/bin/node"
 
 DEBUG = True
 SEND_OTP = True
 dor_email='dor@uni.edu'
 accounts_email='accounts@uni.edu'
+threshold = 40000
 
 ACCESS = {
     'dor': 0,
@@ -373,7 +374,7 @@ def Approval():
     transaction_ids = []
     for txn in transactions:
         if (txn["txn"]["approvals"] != (-1) and session["email"] not in txn["txn"]["approvers"]):
-            if session["email"] in txn["txn"]["userID"]:
+            if (session["email"] in txn["txn"]["userID"]) or (session["email"] in dor_email and int(txn["txn"]["proposed_amount"])<=threshold):
                 continue
             else:
                 unapproved_txn = {}
@@ -388,29 +389,41 @@ def Approval():
 
                 unapproved_txn["approvals"] = txn["txn"]["approvals"]
                 unapproved_txn["approvers"] = txn["txn"]["approvers"]
-                unapproved_txn["approve_button"] = txn["Key"]
                 transaction_ids.append(txn["Key"])
                 to_approve.append(unapproved_txn)
 
+    if(len(to_approve)==0):
+        flash('No more transactions to approve!','success')
+        return redirect('/table')
+
     table = ApprovalsTable(to_approve)
-    # print(table.txnID)
+ 
     f = open("templates/table.html", 'w+') 
     f.truncate(0)
     tbl_string=str(table.__html__())
-    
-    print(tbl_string)
-    f.write('{% extends "table_rough.html" %}\n{% block content %}\n'+tbl_string+'\n{% endblock %}')   
-    # i = 0
-    # p=''
-    # for l in f:
-    #     x = l
-    #     if(i<len(transaction_ids)):
-    #         p = "value="+"\""+ transaction_ids[i]+"\""
-    #         print(p)
-    #     l = l.replace("value=\"\"", p)
-    #     g.write(l)
-    #     if(x!=l):
-    #         i=i+1
+
+    t = 0
+    new_tbl_string = ""
+    prev_idx=-1
+    for i in range(len(tbl_string)):
+        idx = tbl_string.find("value=\"\"")
+        if(idx!=-1) and (t<(len(transaction_ids))):
+            new_tbl_string = new_tbl_string+tbl_string[:idx]
+            add_str = "value="+"\""+ str(transaction_ids[t])+"\""
+            new_tbl_string = new_tbl_string+add_str
+            t = t+1
+            i = 0
+            tbl_string = tbl_string[idx+len(add_str)-1:]
+            prev_idx=idx
+            print(tbl_string)
+        else:
+            if(prev_idx!=-1):
+                new_tbl_string = new_tbl_string+tbl_string
+            break
+
+    print(new_tbl_string)
+    f.write('{% extends "table_rough.html" %}\n{% block content %}\n'+new_tbl_string+'\n{% endblock %}')
+
     return redirect('/table')
 
 @app.route('/table')
