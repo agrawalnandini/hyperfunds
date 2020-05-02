@@ -10,6 +10,8 @@ import string
 import subprocess
 from functools import wraps
 from flask import url_for,session,jsonify
+from flask_table import Table, Col, ButtonCol
+import fileinput
 
 app = Flask(__name__)
 
@@ -31,8 +33,13 @@ if os.path.isfile(db_path):
 else:
     utils.write_file(db_path, "{}")
 
+
+# FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
+# NODE_PATH = "/usr/bin/node"
+
 FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
 NODE_PATH = "/usr/local/bin/node"
+
 DEBUG = True
 SEND_OTP = True
 dor_email='dor@uni.edu'
@@ -253,6 +260,7 @@ def getBalance(req_obj):
         return -1
 
 def approve_txn(user, txnid):
+    print('In approval')
     #returns 1 on failure
     output = "approval unsuccessful"
 
@@ -345,30 +353,81 @@ def Proposal_post():
         return redirect('/Proposal')
 
 
+class ApprovalsTable(Table):
+    classes=["table", "table-bordered"]
+    txnID = Col('TransactionID')
+    fac_email = Col('Faculty EmailID')
+    amt = Col('Amount')
+    userID = Col('User')
+    approvals = Col('Number of approvals')
+    approvers = Col('Approvers')
+    approve_button = ButtonCol('Approve transaction', button_attrs={'class': "contact100-form-btn", 'name': 'txnid', 'value': ""}, endpoint='table')
+
+
 @app.route('/Approval')
 @login_required
 def Approval():
-    '''
     #Query all transactions
     transactions = query_all_txn(session["email"])
     to_approve = []
+    transaction_ids = []
     for txn in transactions:
-        if (txn["txn"]["approvals"] != (-1) and session["email"] not in txn["txn"]["approvers"] ):
-            to_approve.append(txn)
-            '''
-    return render_template('%s.html' % 'Approval')
+        if (txn["txn"]["approvals"] != (-1) and session["email"] not in txn["txn"]["approvers"]):
+            if session["email"] in txn["txn"]["userID"]:
+                continue
+            else:
+                unapproved_txn = {}
+                unapproved_txn["txnID"] = txn["Key"]
+                unapproved_txn["fac_email"] = txn["txn"]["faculty_email_id"]
+                unapproved_txn["amt"] = txn["txn"]["proposed_amount"]
+            
+                if dor_email in txn["txn"]["userID"]:
+                    unapproved_txn["userID"] = dor_email
+                else: 
+                    unapproved_txn["userID"] = txn["txn"]["faculty_email_id"]
 
-@app.route('/Approval', methods=['POST'])
+                unapproved_txn["approvals"] = txn["txn"]["approvals"]
+                unapproved_txn["approvers"] = txn["txn"]["approvers"]
+                unapproved_txn["approve_button"] = txn["Key"]
+                transaction_ids.append(txn["Key"])
+                to_approve.append(unapproved_txn)
+
+    table = ApprovalsTable(to_approve)
+    # print(table.txnID)
+    f = open("templates/table.html", 'w+') 
+    f.truncate(0)
+    tbl_string=str(table.__html__())
+    
+    print(tbl_string)
+    f.write('{% extends "table_rough.html" %}\n{% block content %}\n'+tbl_string+'\n{% endblock %}')   
+    # i = 0
+    # p=''
+    # for l in f:
+    #     x = l
+    #     if(i<len(transaction_ids)):
+    #         p = "value="+"\""+ transaction_ids[i]+"\""
+    #         print(p)
+    #     l = l.replace("value=\"\"", p)
+    #     g.write(l)
+    #     if(x!=l):
+    #         i=i+1
+    return redirect('/table')
+
+@app.route('/table')
 @login_required
-def Approval_post():
+def table():
+    return render_template('table.html')
+
+@app.route('/table', methods=['POST'])
+@login_required
+def table_approve():
     check = approve_txn(session["email"], request.form["txnid"])
     if check==0:
-        flash('Transaction is approved successfully','success')
+        flash('Transaction has been approved successfully','success')
         return redirect('/Approval')
     else:
         flash('Error in approving transaction','error')
         return redirect('/Approval')
-
 
 
 @app.route('/getbalance')
@@ -417,6 +476,5 @@ def query():
     return render_template('response.html',response=res)
 
 
-
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
