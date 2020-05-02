@@ -202,7 +202,7 @@ def query_by_email(user, email):
         return 0
     
     else:
-        return 1
+        return output
 
 def query_all_txn(user):
     #returns 1 on failure
