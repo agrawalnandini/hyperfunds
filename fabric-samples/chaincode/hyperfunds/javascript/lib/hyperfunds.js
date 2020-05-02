@@ -159,7 +159,7 @@ class Hyperfunds extends Contract
 		const txn = JSON.parse(TxnAsBytes.toString());
 
 		//check if not already approved and this approver id is not in the approvers list
-		if((txn.approvals!=-1) && !(txn.approvers.includes(approverid)))     
+		if((txn.approvals!=-1) && !(txn.approvers.includes(approverid)) && !(txn.userID.includes(approverid)))     
 		{
 			 // push new approver in approval list
 			 txn.approvers.push(approverid);
