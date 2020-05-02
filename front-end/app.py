@@ -34,11 +34,11 @@ else:
     utils.write_file(db_path, "{}")
 
 
-FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
-NODE_PATH = "/usr/bin/node"
+# FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
+# NODE_PATH = "/usr/bin/node"
 
-# FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
-# NODE_PATH = "/usr/local/bin/node"
+FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
+NODE_PATH = "/usr/local/bin/node"
 
 DEBUG = True
 SEND_OTP = True
@@ -109,9 +109,13 @@ def check_dashboard(email):
 def createProposal(req_obj):
     #0 for success
     userid = session['email']
-    
     amt = req_obj['amount']
     fac_email=req_obj['email']
+
+    #so that faculty cannot give any other faculty's email
+    if userid!=dor_email:
+        if fac_email!=userid:
+            return 1
 
     output = "error"
 
@@ -243,6 +247,10 @@ def getBalance(req_obj):
     #-1 for failure
     userid = session['email']
     fac_email=req_obj['email']
+
+    if userid!=dor_email and userid!=accounts_email:
+        if fac_email!=userid:
+            return -1
 
     output = "error"
 
