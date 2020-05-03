@@ -139,8 +139,15 @@
     </ul>
   </nav>
   <main>
-    <h1>Welcome!</h1>
-    <p>
+    <h1>Welcome, 
+      {% with messages= get_flashed_messages()%}
+        {% if messages %}
+          {%for message in messages%}
+              {{message}}
+          {% endfor %}
+        {% endif %}
+      {% endwith %}!    
+      </h1>    <p>
         <h4>Send request transaction</h4> 
         Send a proposal to spend your funds using this option.
     </p>

@@ -433,7 +433,6 @@ def Approval():
                 new_tbl_string = new_tbl_string+tbl_string
             break
 
-    # print(new_tbl_string)
     f.write('{% extends "table_rough.html" %}\n{% block content %}\n'+new_tbl_string+'\n{% endblock %}')
     f.close()
     if(len(to_approve)==0):
@@ -467,10 +466,10 @@ def getbalance():
 def getbalance_post():
     bal=getBalance(request.form)
     if bal==-1:
-        flash('Error in finding balance','error')
+        flash('Faculty does not exist or error in finding balance!','error')
         return redirect('/getbalance')
     else:
-        flash('The Balance of '+request.form['email']+ ' is '+bal,'notification')
+        flash('The current balance of '+request.form['email']+ ' is '+bal+".",'notification')
         return redirect('/getbalance')
        
 class QueryTable(Table):

@@ -22,8 +22,11 @@ def send_verification_email(recv_addr, pwd):
         session = smtplib.SMTP('smtp.gmail.com', 587)
         session.starttls()
         session.login(content[0], content[1])
-        message = "Subject: Welcome to Hyperfunds!\n\nYour password is " + pwd + "."
-        session.sendmail("hyperfunds.service@gmail.com", recv_addr, message)
+        idx = recv_addr.find(".")
+        first_name = recv_addr[:idx]
+        last_name = recv_addr[len(first_name):recv_addr.find("@")]
+        message = "Subject: Welcome to Hyperfunds!\n\nDear "+ first_name+" " + last_name+",\nYou have been successfully registered to Hyperfunds app! Your password is " + pwd + "."
+        session.sendmail("Hyperfunds App <hyperfunds.service@gmail.com>", recv_addr, message)
         session.quit()
     except Exception as e:
         print(e)
