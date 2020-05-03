@@ -34,11 +34,11 @@ else:
     utils.write_file(db_path, "{}")
 
 
-# FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
-# NODE_PATH = "/usr/bin/node"
+FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
+NODE_PATH = "/usr/bin/node"
 
-FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
-NODE_PATH = "/usr/local/bin/node"
+# FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
+# NODE_PATH = "/usr/local/bin/node"
 
 DEBUG = True
 SEND_OTP = True
@@ -60,7 +60,7 @@ def handle_setup(req_obj, flag):
         # if user already exists, fail
         # if no more wallets available, fail
         if uid in user_dict:
-            utils.send_verification_email(uid, user_dict[uid]['pwd'])
+            # utils.send_verification_email(uid, user_dict[uid]['pwd'])
             return 1
 
         # else assign user with a wallet
@@ -385,7 +385,7 @@ def Approval():
 
     for txn in transactions:
         if (txn["txn"]["approvals"] != (-1) and session["email"] not in txn["txn"]["approvers"]):
-            if (session["email"] in txn["txn"]["userID"]) or (session["email"] in dor_email and int(txn["txn"]["proposed_amount"])<=threshold):
+            if (session["email"] in txn["txn"]["userID"]) or (session["email"] in dor_email and ((-1)*int(txn["txn"]["proposed_amount"]))<=threshold):
                 continue
             else:
                 unapproved_txn = {}
@@ -398,10 +398,13 @@ def Approval():
                 else: 
                     unapproved_txn["userID"] = txn["txn"]["faculty_email_id"]
 
-                unapproved_txn["approvals"] = txn["txn"]["approvals"]
+                if txn["txn"]["approvals"]==-1:
+                    qtxn["approvals"] = "Approved"
+                else:
+                    qtxn["approvals"] = txn["txn"]["approvals"]
 
-                if txn["txn"]["approvers"]=='[]':
-                    unapproved_txn["approvers"] = "No Approvers Yet"
+                if txn["txn"]["approvers"]==[]:
+                    unapproved_txn["approvers"] = "Nil"
                 else:
                     unapproved_txn["approvers"] = txn["txn"]["approvers"]
                 transaction_ids.append(txn["Key"])
@@ -503,12 +506,12 @@ def query_email_post():
         else: 
             qtxn["userID"] = txn["txn"]["faculty_email_id"]
 
-        if txn["txn"]["approvals"]=='-1':
+        if txn["txn"]["approvals"]==-1:
             qtxn["approvals"] = "Approved"
         else:
             qtxn["approvals"] = txn["txn"]["approvals"]
 
-        if txn["txn"]["approvers"]=='[]':
+        if txn["txn"]["approvers"]==[]:
             qtxn["approvers"] = "Nil"
         else:
             qtxn["approvers"] = txn["txn"]["approvers"]
@@ -590,12 +593,12 @@ def query():
         else: 
             qtxn["userID"] = txn["txn"]["faculty_email_id"]
 
-        if txn["txn"]["approvals"]=='-1':
+        if txn["txn"]["approvals"]==-1:
             qtxn["approvals"] = "Approved"
         else:
             qtxn["approvals"] = txn["txn"]["approvals"]
 
-        if txn["txn"]["approvers"]=='[]':
+        if txn["txn"]["approvers"]==[]:
             qtxn["approvers"] = "Nil"
         else:
             qtxn["approvers"] = txn["txn"]["approvers"]
