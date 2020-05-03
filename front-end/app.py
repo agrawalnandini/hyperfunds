@@ -11,7 +11,7 @@ import subprocess
 from functools import wraps
 from flask import url_for,session,jsonify
 from flask_table import Table, Col, ButtonCol
-import fileinput
+import asyncio
 
 app = Flask(__name__)
 
@@ -34,11 +34,11 @@ else:
     utils.write_file(db_path, "{}")
 
 
-FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
-NODE_PATH = "/usr/bin/node"
+# FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
+# NODE_PATH = "/usr/bin/node"
 
-# FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
-# NODE_PATH = "/usr/local/bin/node"
+FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
+NODE_PATH = "/usr/local/bin/node"
 
 DEBUG = True
 SEND_OTP = True
@@ -299,7 +299,6 @@ def login_post():
         session.pop('email',None)
         session['email']=request.form['email']
         login_user(User(request.form['email']))
-        flash(''+session['email'])
         return redirect(check_dashboard(request.form['email']))
     else:
         flash('Incorrect email/password')
@@ -330,6 +329,7 @@ def logout():
 @login_required
 @requires_access_level(ACCESS['dor'])
 def dor_home():
+    flash(''+session['email'])
     return render_template('%s.html' % 'dor_home')
 
 
@@ -337,6 +337,7 @@ def dor_home():
 @login_required
 @requires_access_level(ACCESS['faculty'])
 def faculty_home():
+    flash(''+session['email'])
     return render_template('%s.html' % 'faculty_home')
 
 
@@ -344,6 +345,7 @@ def faculty_home():
 @login_required
 @requires_access_level(ACCESS['accounts'])
 def accounts_home():
+    flash(''+session['email'])
     return render_template('%s.html' % 'accounts_home')
 
 @app.route('/Proposal')
@@ -379,6 +381,7 @@ class ApprovalsTable(Table):
 def Approval():
     #Query all transactions
     transactions = query_all_txn(session["email"])
+    #flash(transactions,dic)
     to_approve = []
     transaction_ids = []
     print(type(transactions))
@@ -399,9 +402,9 @@ def Approval():
                     unapproved_txn["userID"] = txn["txn"]["faculty_email_id"]
 
                 if txn["txn"]["approvals"]==-1:
-                    qtxn["approvals"] = "Approved"
+                    unapproved_txn["approvals"] = "Approved"
                 else:
-                    qtxn["approvals"] = txn["txn"]["approvals"]
+                    unapproved_txn["approvals"] = txn["txn"]["approvals"]
 
                 if txn["txn"]["approvers"]==[]:
                     unapproved_txn["approvers"] = "Nil"
@@ -458,6 +461,10 @@ def table_approve():
     else:
         flash('Error in approving transaction','error')
         return redirect('/Approval')
+
+@app.route('/table_query')
+def table_query():
+    return render_template('table.html')
 
 
 @app.route('/getbalance')
@@ -529,7 +536,7 @@ def query_email_post():
     if(len(allquerytxns)==0):
         flash('No transactions to show','notification')
     
-    return redirect('/table')
+    return redirect('/table_query')
 
 @app.route('/query_txnid')
 @login_required
@@ -575,7 +582,7 @@ def query_txnid_post():
     if(len(allquerytxns)==0):
         flash('No transactions to show','notification')
 
-    return redirect('/table')
+    return redirect('/table_query')
 
 @app.route('/query')
 @login_required
@@ -615,8 +622,9 @@ def query():
     if(len(allquerytxns)==0):
         flash('No transactions to show','notification')
 
-    return redirect('/table')
+    return redirect('/table_query')
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="192.168.0.152",port="5000")
+    #app.run(debug=True)

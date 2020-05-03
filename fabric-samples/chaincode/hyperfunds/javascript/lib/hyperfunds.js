@@ -239,7 +239,7 @@ class Hyperfunds extends Contract
 		if(userid.includes(txn.faculty_email_id) || userid.includes(dor_email) || userid.includes(accdept_email))
 		{
 			console.log(txn);
-			return JSON.stringify({Key,txn});
+			return JSON.stringify(txn);
 		}
 
 		else
