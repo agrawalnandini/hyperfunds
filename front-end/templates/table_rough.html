@@ -23,7 +23,7 @@
 			<div class="table-bordered">
 				{% block content %}
 				{% endblock %}
-				<div class="alert-box">
+				<div class="alert-box2">
 					{% with messages= get_flashed_messages(with_categories=true)%}
 						{% if messages %}
 							{% for category,message in messages%}
@@ -36,6 +36,13 @@
 	
 								{% if category=='error' %}
 								<div class="alert alert-danger alert-dismissible" role="alert">
+									<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+									<strong>{{message}}</strong>
+								</div>
+								{% endif %}
+
+								{% if category=='notification' %}
+								<div class="alert alert-info alert-dismissible" role="alert">
 									<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 									<strong>{{message}}</strong>
 								</div>

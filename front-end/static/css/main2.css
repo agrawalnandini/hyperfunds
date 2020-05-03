@@ -83,6 +83,10 @@ ul, li {
 
 
 /*---------------------------------------------*/
+th, td {
+  font-weight: bold;
+}
+
 input {
 	outline: none;
 	border: none;
@@ -136,6 +140,14 @@ iframe {
   height: 1000px; /* Changed this height */
   position: absolute;
 }
+
+.alert-box2{
+  height: 1000px; /* Changed this height */
+  position: relative;
+  padding: 140px;
+  font-size: 140px;
+}
+
 
 /*//////////////////////////////////////////////////////////////////
 [ Contact ]*/

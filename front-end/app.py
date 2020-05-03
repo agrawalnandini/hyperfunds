@@ -34,11 +34,11 @@ else:
     utils.write_file(db_path, "{}")
 
 
-# FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
-# NODE_PATH = "/usr/bin/node"
+FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
+NODE_PATH = "/usr/bin/node"
 
-FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
-NODE_PATH = "/usr/local/bin/node"
+# FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
+# NODE_PATH = "/usr/local/bin/node"
 
 DEBUG = True
 SEND_OTP = True
@@ -269,7 +269,6 @@ def getBalance(req_obj):
         return -1
 
 def approve_txn(user, txnid):
-    print('In approval')
     #returns 1 on failure
     output = "approval unsuccessful"
 
@@ -380,6 +379,8 @@ def Approval():
     transactions = query_all_txn(session["email"])
     to_approve = []
     transaction_ids = []
+    print(type(transactions))
+
     for txn in transactions:
         if (txn["txn"]["approvals"] != (-1) and session["email"] not in txn["txn"]["approvers"]):
             if (session["email"] in txn["txn"]["userID"]) or (session["email"] in dor_email and int(txn["txn"]["proposed_amount"])<=threshold):
@@ -400,10 +401,6 @@ def Approval():
                 transaction_ids.append(txn["Key"])
                 to_approve.append(unapproved_txn)
 
-    if(len(to_approve)==0):
-        flash('No more transactions to approve!','success')
-        return redirect('/table')
-
     table = ApprovalsTable(to_approve)
  
     f = open("templates/table.html", 'w+') 
@@ -417,11 +414,12 @@ def Approval():
         idx = tbl_string.find("value=\"\"")
         if(idx!=-1) and (t<(len(transaction_ids))):
             new_tbl_string = new_tbl_string+tbl_string[:idx]
+            og_str_len = len("value=\"\"")
             add_str = "value="+"\""+ str(transaction_ids[t])+"\""
             new_tbl_string = new_tbl_string+add_str
             t = t+1
             i = 0
-            tbl_string = tbl_string[idx+len(add_str)-1:]
+            tbl_string = tbl_string[idx+og_str_len:]
             prev_idx=idx
             print(tbl_string)
         else:
@@ -429,8 +427,11 @@ def Approval():
                 new_tbl_string = new_tbl_string+tbl_string
             break
 
-    print(new_tbl_string)
+    # print(new_tbl_string)
     f.write('{% extends "table_rough.html" %}\n{% block content %}\n'+new_tbl_string+'\n{% endblock %}')
+    f.close()
+    if(len(to_approve)==0):
+        flash('All done! No more transactions to approve.','notification')
 
     return redirect('/table')
 
@@ -463,9 +464,17 @@ def getbalance_post():
         flash('Error in finding balance','error')
         return redirect('/getbalance')
     else:
-        flash('Balance is '+bal,'success')
+        flash('Balance is '+bal,'notification')
         return redirect('/getbalance')
        
+class QueryTable(Table):
+    classes=["table", "table-bordered"]
+    txnID = Col('TransactionID')
+    fac_email = Col('Faculty EmailID')
+    amt = Col('Amount')
+    userID = Col('User')
+    approvals = Col('Number of approvals')
+    approvers = Col('Approvers')
 
 @app.route('/query_email')
 @login_required
@@ -475,9 +484,36 @@ def query_email():
 @app.route('/query_email', methods=['POST'])
 @login_required
 def query_email_post():
-    res = query_by_email(session["email"], request.form["email"])
-    print(res)
-    return render_template('response.html',response=res)
+    transactions = query_by_email(session["email"], request.form["email"])
+
+    allquerytxns = []
+    for txn in transactions:
+        qtxn = {}
+        qtxn["txnID"] = txn["Key"]
+        qtxn["fac_email"] = txn["txn"]["faculty_email_id"]
+        qtxn["amt"] = txn["txn"]["proposed_amount"]
+    
+        if dor_email in txn["txn"]["userID"]:
+            qtxn["userID"] = dor_email
+        else: 
+            qtxn["userID"] = txn["txn"]["faculty_email_id"]
+
+        qtxn["approvals"] = txn["txn"]["approvals"]
+        qtxn["approvers"] = txn["txn"]["approvers"]
+        allquerytxns.append(qtxn)
+
+    table = QueryTable(allquerytxns)
+ 
+    f = open("templates/table.html", 'w+') 
+    f.truncate(0)
+    tbl_string=str(table.__html__())
+    f.write('{% extends "table_rough.html" %}\n{% block content %}\n'+tbl_string+'\n{% endblock %}')
+    f.close()
+
+    if(len(allquerytxns)==0):
+        flash('No transactions to show','notification')
+    
+    return redirect('/table')
 
 @app.route('/query_txnid')
 @login_required
@@ -487,14 +523,68 @@ def query_txnid():
 @app.route('/query_txnid', methods=['POST'])
 @login_required
 def query_txnid_post():
-    res = query_by_txnid(session["email"], request.form["txnid"])
-    return render_template('response.html',response=res)
+    transactions = query_by_txnid(session["email"], request.form["txnid"])
+   
+    allquerytxns = []
+    for txn in transactions:
+        qtxn = {}
+        qtxn["txnID"] = txn["Key"]
+        qtxn["fac_email"] = txn["txn"]["faculty_email_id"]
+        qtxn["amt"] = txn["txn"]["proposed_amount"]
+    
+        if dor_email in txn["txn"]["userID"]:
+            qtxn["userID"] = dor_email
+        else: 
+            qtxn["userID"] = txn["txn"]["faculty_email_id"]
+
+        qtxn["approvals"] = txn["txn"]["approvals"]
+        qtxn["approvers"] = txn["txn"]["approvers"]
+        allquerytxns.append(qtxn)
+
+    table = QueryTable(allquerytxns)
+ 
+    f = open("templates/table.html", 'w+') 
+    f.truncate(0)
+    tbl_string=str(table.__html__())
+    f.write('{% extends "table_rough.html" %}\n{% block content %}\n'+tbl_string+'\n{% endblock %}')
+    f.close()
+
+    if(len(allquerytxns)==0):
+        flash('No transactions to show','notification')
+
+    return redirect('/table')
 
 @app.route('/query')
 @login_required
 def query():
-    res = query_all_txn(session["email"])
-    return render_template('response.html',response=res)
+    transactions = query_all_txn(session["email"])
+    allquerytxns = []
+    for txn in transactions:
+        qtxn = {}
+        qtxn["txnID"] = txn["Key"]
+        qtxn["fac_email"] = txn["txn"]["faculty_email_id"]
+        qtxn["amt"] = txn["txn"]["proposed_amount"]
+    
+        if dor_email in txn["txn"]["userID"]:
+            qtxn["userID"] = dor_email
+        else: 
+            qtxn["userID"] = txn["txn"]["faculty_email_id"]
+
+        qtxn["approvals"] = txn["txn"]["approvals"]
+        qtxn["approvers"] = txn["txn"]["approvers"]
+        allquerytxns.append(qtxn)
+
+    table = QueryTable(allquerytxns)
+ 
+    f = open("templates/table.html", 'w+') 
+    f.truncate(0)
+    tbl_string=str(table.__html__())
+    f.write('{% extends "table_rough.html" %}\n{% block content %}\n'+tbl_string+'\n{% endblock %}')
+    f.close()
+    if(len(allquerytxns)==0):
+        flash('No transactions to show','notification')
+
+    return redirect('/table')
 
 
 if __name__ == '__main__':
