@@ -83,9 +83,6 @@ ul, li {
 
 
 /*---------------------------------------------*/
-th, td {
-  font-weight: bold;
-}
 
 input {
 	outline: none;
@@ -143,12 +140,21 @@ iframe {
 
 .alert-box2{
   height: 1000px; /* Changed this height */
-  position: relative;
-  padding: 140px;
-  font-size: 140px;
+  position: absolute;
+  padding: 0px;
+  /*font-size: 80px;*/
 }
 
-
+/*.td{
+  font-weight: bold;
+  color: black;
+  font-size: 60px;
+}
+.th{
+  font-weight: bold;
+  color: black;
+  font-size: 60px;
+}*/
 /*//////////////////////////////////////////////////////////////////
 [ Contact ]*/
 

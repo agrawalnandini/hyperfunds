@@ -175,6 +175,7 @@ def query_by_txnid(user, txnid):
         #Use only the dictionary part of the string
         output = output[start_of_dict_index:]
         #Convert string to dictionary
+        print("Output is: ", output)
         output = eval(output)
 
     except:
@@ -464,7 +465,7 @@ def getbalance_post():
         flash('Error in finding balance','error')
         return redirect('/getbalance')
     else:
-        flash('Balance is '+bal,'notification')
+        flash('Balance is '+bal,'success')
         return redirect('/getbalance')
        
 class QueryTable(Table):
@@ -507,7 +508,7 @@ def query_email_post():
     f = open("templates/table.html", 'w+') 
     f.truncate(0)
     tbl_string=str(table.__html__())
-    f.write('{% extends "table_rough.html" %}\n{% block content %}\n'+tbl_string+'\n{% endblock %}')
+    f.write('{% extends "query_email_rough.html" %}\n{% block content %}\n'+tbl_string+'\n{% endblock %}')
     f.close()
 
     if(len(allquerytxns)==0):
@@ -524,29 +525,28 @@ def query_txnid():
 @login_required
 def query_txnid_post():
     transactions = query_by_txnid(session["email"], request.form["txnid"])
-   
+    print("Transaction is ",transactions)
     allquerytxns = []
-    for txn in transactions:
-        qtxn = {}
-        qtxn["txnID"] = txn["Key"]
-        qtxn["fac_email"] = txn["txn"]["faculty_email_id"]
-        qtxn["amt"] = txn["txn"]["proposed_amount"]
-    
-        if dor_email in txn["txn"]["userID"]:
-            qtxn["userID"] = dor_email
-        else: 
-            qtxn["userID"] = txn["txn"]["faculty_email_id"]
+    qtxn = {}
+    qtxn["txnID"] = request.form["txnid"]
+    qtxn["fac_email"] = transactions["faculty_email_id"]
+    qtxn["amt"] = transactions["proposed_amount"]
 
-        qtxn["approvals"] = txn["txn"]["approvals"]
-        qtxn["approvers"] = txn["txn"]["approvers"]
-        allquerytxns.append(qtxn)
+    if dor_email in transactions["userID"]:
+        qtxn["userID"] = dor_email
+    else: 
+        qtxn["userID"] = transactions["faculty_email_id"]
+
+    qtxn["approvals"] = transactions["approvals"]
+    qtxn["approvers"] = transactions["approvers"]
+    allquerytxns.append(qtxn)
 
     table = QueryTable(allquerytxns)
  
     f = open("templates/table.html", 'w+') 
     f.truncate(0)
     tbl_string=str(table.__html__())
-    f.write('{% extends "table_rough.html" %}\n{% block content %}\n'+tbl_string+'\n{% endblock %}')
+    f.write('{% extends "query_txnid_rough.html" %}\n{% block content %}\n'+tbl_string+'\n{% endblock %}')
     f.close()
 
     if(len(allquerytxns)==0):
@@ -579,7 +579,7 @@ def query():
     f = open("templates/table.html", 'w+') 
     f.truncate(0)
     tbl_string=str(table.__html__())
-    f.write('{% extends "table_rough.html" %}\n{% block content %}\n'+tbl_string+'\n{% endblock %}')
+    f.write('{% extends "queryall_rough.html" %}\n{% block content %}\n'+tbl_string+'\n{% endblock %}')
     f.close()
     if(len(allquerytxns)==0):
         flash('No transactions to show','notification')

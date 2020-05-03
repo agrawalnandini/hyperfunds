@@ -224,6 +224,7 @@ class Hyperfunds extends Contract
 		let cid=new ClientIdentity(ctx.stub);
 		let userid=cid.getID();
 
+
 		const TxnAsBytes= await ctx.stub.getState(query_txnid);   
 		//if nothing retrived then throw error 
 		if (!TxnAsBytes || TxnAsBytes.length === 0) 
@@ -238,7 +239,7 @@ class Hyperfunds extends Contract
 		if(userid.includes(txn.faculty_email_id) || userid.includes(dor_email) || userid.includes(accdept_email))
 		{
 			console.log(txn);
-			return JSON.stringify(txn);
+			return JSON.stringify({Key,txn});
 		}
 
 		else
