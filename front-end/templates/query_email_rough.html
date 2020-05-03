@@ -16,12 +16,12 @@
 td{
   font-weight: bold;
   color: black;
-  font-size: 30px;
+  font-size: 15px;
 }
 th{
   font-weight: bold;
   color: black;
-  font-size: 30px;
+  font-size: 20px;
 }
 
 </style>
@@ -35,7 +35,7 @@ th{
 			<div class="table-bordered">
 				{% block content %}
 				{% endblock %}
-				<div class="alert-box2">
+				<div class="alert-box">
 					{% with messages= get_flashed_messages(with_categories=true)%}
 						{% if messages %}
 							{% for category,message in messages%}

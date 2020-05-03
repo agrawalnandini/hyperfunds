@@ -163,7 +163,15 @@
     </ul>
   </nav>
   <main>
-    <h1>Welcome!</h1>
+    <h1>Welcome,
+      {% with messages= get_flashed_messages()%}
+        {% if messages %}
+          {%for message in messages%}
+              {{message}}
+          {% endfor %}
+        {% endif %}
+      {% endwith %}    
+      </h1>
     <p>
         <h4>Add funds</h4> 
         Add funds to faculty members' account using their email ID. 

@@ -22,7 +22,7 @@ def send_verification_email(recv_addr, pwd):
         session = smtplib.SMTP('smtp.gmail.com', 587)
         session.starttls()
         session.login(content[0], content[1])
-        message = "Subject: Hi there!\n\nYour password is " + pwd + "."
+        message = "Subject: Welcome to Hyperfunds!\n\nYour password is " + pwd + "."
         session.sendmail("hyperfunds.service@gmail.com", recv_addr, message)
         session.quit()
     except Exception as e:

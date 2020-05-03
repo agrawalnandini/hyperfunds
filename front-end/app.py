@@ -34,11 +34,11 @@ else:
     utils.write_file(db_path, "{}")
 
 
-FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
-NODE_PATH = "/usr/bin/node"
+# FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
+# NODE_PATH = "/usr/bin/node"
 
-# FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
-# NODE_PATH = "/usr/local/bin/node"
+FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
+NODE_PATH = "/usr/local/bin/node"
 
 DEBUG = True
 SEND_OTP = True
@@ -299,6 +299,7 @@ def login_post():
         session.pop('email',None)
         session['email']=request.form['email']
         login_user(User(request.form['email']))
+        flash(''+session['email'])
         return redirect(check_dashboard(request.form['email']))
     else:
         flash('Incorrect email/password')
@@ -398,7 +399,11 @@ def Approval():
                     unapproved_txn["userID"] = txn["txn"]["faculty_email_id"]
 
                 unapproved_txn["approvals"] = txn["txn"]["approvals"]
-                unapproved_txn["approvers"] = txn["txn"]["approvers"]
+
+                if txn["txn"]["approvers"]=='[]':
+                    unapproved_txn["approvers"] = "No Approvers Yet"
+                else:
+                    unapproved_txn["approvers"] = txn["txn"]["approvers"]
                 transaction_ids.append(txn["Key"])
                 to_approve.append(unapproved_txn)
 
@@ -465,7 +470,7 @@ def getbalance_post():
         flash('Error in finding balance','error')
         return redirect('/getbalance')
     else:
-        flash('Balance is '+bal,'success')
+        flash('The Balance of '+request.form['email']+ ' is '+bal,'notification')
         return redirect('/getbalance')
        
 class QueryTable(Table):
@@ -499,8 +504,16 @@ def query_email_post():
         else: 
             qtxn["userID"] = txn["txn"]["faculty_email_id"]
 
-        qtxn["approvals"] = txn["txn"]["approvals"]
-        qtxn["approvers"] = txn["txn"]["approvers"]
+        if txn["txn"]["approvals"]=='-1':
+            qtxn["approvals"] = "Approved"
+        else:
+            qtxn["approvals"] = txn["txn"]["approvals"]
+
+        if txn["txn"]["approvers"]=='[]':
+            qtxn["approvers"] = "Nil"
+        else:
+            qtxn["approvers"] = txn["txn"]["approvers"]
+        
         allquerytxns.append(qtxn)
 
     table = QueryTable(allquerytxns)
@@ -537,8 +550,16 @@ def query_txnid_post():
     else: 
         qtxn["userID"] = transactions["faculty_email_id"]
 
-    qtxn["approvals"] = transactions["approvals"]
-    qtxn["approvers"] = transactions["approvers"]
+    if transactions["approvals"]==-1:
+        qtxn["approvals"] = "Approved"
+    else:
+        qtxn["approvals"] = transactions["approvals"]
+
+    if len(transactions["approvers"])==0:
+        qtxn["approvers"] = "Nil"
+    else:
+        qtxn["approvers"] = transactions["approvers"]
+
     allquerytxns.append(qtxn)
 
     table = QueryTable(allquerytxns)
@@ -570,8 +591,16 @@ def query():
         else: 
             qtxn["userID"] = txn["txn"]["faculty_email_id"]
 
-        qtxn["approvals"] = txn["txn"]["approvals"]
-        qtxn["approvers"] = txn["txn"]["approvers"]
+        if txn["txn"]["approvals"]=='-1':
+            qtxn["approvals"] = "Approved"
+        else:
+            qtxn["approvals"] = txn["txn"]["approvals"]
+
+        if txn["txn"]["approvers"]=='[]':
+            qtxn["approvers"] = "Nil"
+        else:
+            qtxn["approvers"] = txn["txn"]["approvers"]
+    
         allquerytxns.append(qtxn)
 
     table = QueryTable(allquerytxns)

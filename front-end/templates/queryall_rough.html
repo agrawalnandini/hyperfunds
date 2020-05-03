@@ -13,6 +13,19 @@
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='../static/css/util.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='../static/css/main2.css')}}">
 
+	<style>
+		td{
+		  font-weight: bold;
+		  color: black;
+		  font-size: 15px;
+		}
+		th{
+		  font-weight: bold;
+		  color: black;
+		  font-size: 20px;
+		}
+		
+		</style>
 </head>
 <body>
 	<div class="bg-contact100" style="background-image: url('../static/icon/image.jpeg');">
@@ -23,7 +36,7 @@
 			<div class="table-bordered">
 				{% block content %}
 				{% endblock %}
-				<div class="alert-box2">
+				<div class="alert-box">
 					{% with messages= get_flashed_messages(with_categories=true)%}
 						{% if messages %}
 							{% for category,message in messages%}
