@@ -215,7 +215,7 @@ def query_by_email(user, email):
     if DEBUG:
         print(output)
 
-    if output != "query by txn_email unsuccessful" and output[len(output) - 2] == "!":
+    if output != "query by txn_email unsuccessful":
         return output
     
     else:
