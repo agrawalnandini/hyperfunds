@@ -45,7 +45,7 @@ NODE_PATH = "/usr//bin/node"
 DEBUG = True
 SEND_OTP = True
 dor_email='dor@ashoka.edu.in'
-accounts_email='accounts@ashoka.edu.in'
+accounts_email='accdept@ashoka.edu.in'
 threshold = 40000
 
 ACCESS = {
