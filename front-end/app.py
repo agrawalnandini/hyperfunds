@@ -202,6 +202,8 @@ def query_by_email(user, email):
         #Looking for index where list starts
         keyword_before_dict = "result is: "
         start_of_dict_index = output.find(keyword_before_dict) + len(keyword_before_dict)
+        if(start_of_dict_index - len(keyword_before_dict) == -1):
+            return 1
         #Use only the list part of the string
         output = output[start_of_dict_index:]
         #Convert string to list
