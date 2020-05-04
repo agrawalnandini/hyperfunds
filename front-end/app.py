@@ -39,7 +39,8 @@ else:
 # FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
 # NODE_PATH = "/usr/local/bin/node"
 
-
+FABRIC_DIR="/home/ubuntu/hyperfunds/fabric-samples/hyperfunds/javascript"
+NODE_PATH = "/usr//bin/node"
 
 DEBUG = True
 SEND_OTP = True
@@ -366,17 +367,6 @@ def Proposal_post():
         return redirect('/Proposal')
 
 
-# class ApprovalsTable(Table):
-#     classes=["table", "table-bordered"]
-#     txnID = Col('TransactionID')
-#     fac_email = Col('Faculty EmailID')
-#     amt = Col('Amount')
-#     userID = Col('User')
-#     approvals = Col('Number of approvals')
-#     approvers = Col('Approvers')
-#     approve_button = ButtonCol('Approve transaction', button_attrs={'class': "contact100-form-btn", 'name': 'txnid', 'value': ""}, endpoint='table')
-
-
 @app.route('/Approval')
 @login_required
 def Approval():
@@ -574,5 +564,4 @@ def query():
 
 
 if __name__ == '__main__':
-    # app.run()
-    app.run(debug=True)
+    app.run(host="172.31.31.162", port="5000")
