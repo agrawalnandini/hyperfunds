@@ -455,7 +455,7 @@ def query_email_post():
     transactions = query_by_email(session["email"], request.form["email"])
     if(transactions==1):
         flash("Error in finding Transaction, You may not be authorized",'error')
-        return redirect('\table_query')
+        return redirect('/table_query')
     allquerytxns = []
     for txn in transactions:
         qtxn = {}
@@ -499,7 +499,7 @@ def query_txnid_post():
     transactions = query_by_txnid(session["email"], request.form["txnid"])
     if(transactions==1):
         flash("Error in finding Transaction, You may not be authorized",'error')
-        return redirect('\table_query')
+        return redirect('/table_query')
     # print("Transaction is ",transactions)
     allquerytxns = []
     qtxn = {}
