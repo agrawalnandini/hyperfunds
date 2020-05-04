@@ -213,11 +213,11 @@ def query_by_email(user, email):
     if DEBUG:
         print(output)
 
-    if output != "query by txn_email unsuccessful" and output[len(output) - 1] == "submitted!":
-        return 0
+    if output != "query by txn_email unsuccessful" and output[len(output) - 2] == "!":
+        return output
     
     else:
-        return output
+        return 1
 
 def query_all_txn(user):
     #returns 1 on failure
@@ -453,7 +453,9 @@ def query_email():
 @login_required
 def query_email_post():
     transactions = query_by_email(session["email"], request.form["email"])
-
+    if(transactions==1):
+        flash("Error in finding Transaction, You may not be authorized",'error')
+        return redirect('\table_query')
     allquerytxns = []
     for txn in transactions:
         qtxn = {}
@@ -495,6 +497,9 @@ def query_txnid():
 @login_required
 def query_txnid_post():
     transactions = query_by_txnid(session["email"], request.form["txnid"])
+    if(transactions==1):
+        flash("Error in finding Transaction, You may not be authorized",'error')
+        return redirect('\table_query')
     # print("Transaction is ",transactions)
     allquerytxns = []
     qtxn = {}
