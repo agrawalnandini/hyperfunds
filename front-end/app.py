@@ -456,7 +456,7 @@ def query_email():
 def query_email_post():
     transactions = query_by_email(session["email"], request.form["email"])
     if(transactions==1):
-        flash("Error in finding Transaction, You may not be authorized",'error')
+        flash("Error in finding Transaction or unauthorized access",'error')
         return redirect('/table_query')
     allquerytxns = []
     for txn in transactions:
