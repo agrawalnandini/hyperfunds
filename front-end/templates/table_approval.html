@@ -1,6 +1,6 @@
-{% extends "query_rough.html" %}
+{% extends "table_rough.html" %}
 {% block content %}
-<table class="table table-bordered"> <thead><tr><th>TransactionID</th><th>Faculty EmailID</th><th>Amount</th><th>User</th><th>Number of approvals</th><th>Approvers</th></tr></thead> 
+<table class="table table-bordered"> <thead><tr><th>TransactionID</th><th>Faculty EmailID</th><th>Amount</th><th>User</th><th>Number of approvals</th><th>Approvers</th><th></th></tr></thead> 
 {% with messages= get_flashed_messages()%}
     {% if messages %}
         <tbody>
@@ -14,9 +14,11 @@
                     <td>{{r["userID"]}}</td>
                     <td>{{r["approvals"]}}</td>
                     <td>{{r["approvers"]}}</td>
+                    {% set t = r["txnID"]|string %}
+                    <td><form method="post"><button class="contact100-form-btn" name="txnid" type="submit" value={{t}} >Approve transaction</button></form></td>
                 </tr>
-                {% endfor %}  
-            {% endif %}   
+                {% endfor %}
+            {% endif %}     
         {% endfor %}
     {% endif %}
     </tbody>

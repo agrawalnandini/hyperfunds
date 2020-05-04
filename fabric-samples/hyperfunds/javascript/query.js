@@ -10,8 +10,8 @@ const ccp = JSON.parse(ccpJSON);
 let choice;
 let user;
 let IDoremail;
-let dor_email= 'dor@uni.edu';
-let accounts_email='accounts@uni.edu';
+let dor_email= 'dor@ashoka.edu.in';
+let accounts_email='accounts@ashoka.edu.in';
 
 process.argv.forEach(function (val, index, array) {
 	choice = array[2];		// determines which function to call (query or queryAll or getBalance)

@@ -11,7 +11,6 @@ import subprocess
 from functools import wraps
 from flask import url_for,session,jsonify
 from flask_table import Table, Col, ButtonCol
-import asyncio
 
 app = Flask(__name__)
 
@@ -37,13 +36,15 @@ else:
 # FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
 # NODE_PATH = "/usr/bin/node"
 
-FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
-NODE_PATH = "/usr/local/bin/node"
+# FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
+# NODE_PATH = "/usr/local/bin/node"
+
+
 
 DEBUG = True
 SEND_OTP = True
-dor_email='dor@uni.edu'
-accounts_email='accounts@uni.edu'
+dor_email='dor@ashoka.edu.in'
+accounts_email='accounts@ashoka.edu.in'
 threshold = 40000
 
 ACCESS = {
@@ -175,7 +176,7 @@ def query_by_txnid(user, txnid):
         #Use only the dictionary part of the string
         output = output[start_of_dict_index:]
         #Convert string to dictionary
-        print("Output is: ", output)
+        # print("Output is: ", output)
         output = eval(output)
 
     except:
@@ -271,8 +272,8 @@ def getBalance(req_obj):
 
 def approve_txn(user, txnid):
     #returns 1 on failure
+    # print("Transaction id is",txnid)
     output = "approval unsuccessful"
-
     try:
         #subprocess.call("cd "+FABRIC_DIR,shell=True)
         output = subprocess.check_output([NODE_PATH, FABRIC_DIR + "/invoke.js", "CreateApprovalTxn", txnid, user],cwd=FABRIC_DIR).decode()
@@ -365,15 +366,15 @@ def Proposal_post():
         return redirect('/Proposal')
 
 
-class ApprovalsTable(Table):
-    classes=["table", "table-bordered"]
-    txnID = Col('TransactionID')
-    fac_email = Col('Faculty EmailID')
-    amt = Col('Amount')
-    userID = Col('User')
-    approvals = Col('Number of approvals')
-    approvers = Col('Approvers')
-    approve_button = ButtonCol('Approve transaction', button_attrs={'class': "contact100-form-btn", 'name': 'txnid', 'value': ""}, endpoint='table')
+# class ApprovalsTable(Table):
+#     classes=["table", "table-bordered"]
+#     txnID = Col('TransactionID')
+#     fac_email = Col('Faculty EmailID')
+#     amt = Col('Amount')
+#     userID = Col('User')
+#     approvals = Col('Number of approvals')
+#     approvers = Col('Approvers')
+#     approve_button = ButtonCol('Approve transaction', button_attrs={'class': "contact100-form-btn", 'name': 'txnid', 'value': ""}, endpoint='table')
 
 
 @app.route('/Approval')
@@ -383,12 +384,10 @@ def Approval():
     transactions = query_all_txn(session["email"])
     #flash(transactions,dic)
     to_approve = []
-    transaction_ids = []
-    print(type(transactions))
 
     for txn in transactions:
         if (txn["txn"]["approvals"] != (-1) and session["email"] not in txn["txn"]["approvers"]):
-            if (session["email"] in txn["txn"]["userID"]) or (session["email"] in dor_email and ((-1)*int(txn["txn"]["proposed_amount"]))<=threshold):
+            if (session["email"] in txn["txn"]["userID"]) or (session["email"] in dor_email and ((-1)*int(txn["txn"]["proposed_amount"]))<threshold):
                 continue
             else:
                 unapproved_txn = {}
@@ -410,46 +409,19 @@ def Approval():
                     unapproved_txn["approvers"] = "Nil"
                 else:
                     unapproved_txn["approvers"] = txn["txn"]["approvers"]
-                transaction_ids.append(txn["Key"])
                 to_approve.append(unapproved_txn)
 
-    table = ApprovalsTable(to_approve)
- 
-    f = open("templates/table.html", 'w+') 
-    f.truncate(0)
-    tbl_string=str(table.__html__())
-
-    t = 0
-    new_tbl_string = ""
-    prev_idx=-1
-    for i in range(len(tbl_string)):
-        idx = tbl_string.find("value=\"\"")
-        if(idx!=-1) and (t<(len(transaction_ids))):
-            new_tbl_string = new_tbl_string+tbl_string[:idx]
-            og_str_len = len("value=\"\"")
-            add_str = "value="+"\""+ str(transaction_ids[t])+"\""
-            new_tbl_string = new_tbl_string+add_str
-            t = t+1
-            i = 0
-            tbl_string = tbl_string[idx+og_str_len:]
-            prev_idx=idx
-            print(tbl_string)
-        else:
-            if(prev_idx!=-1):
-                new_tbl_string = new_tbl_string+tbl_string
-            break
-
-    f.write('{% extends "table_rough.html" %}\n{% block content %}\n'+new_tbl_string+'\n{% endblock %}')
-    f.close()
     if(len(to_approve)==0):
-        flash('All done! No more transactions to approve.','notification')
+        flash('No transactions to show','notification')
+    else:
+        flash(to_approve)
 
     return redirect('/table')
 
 @app.route('/table')
 @login_required
 def table():
-    return render_template('table.html')
+    return render_template('table_approval.html')
 
 @app.route('/table', methods=['POST'])
 @login_required
@@ -482,15 +454,6 @@ def getbalance_post():
         flash('The current balance of '+request.form['email']+ ' is '+bal+".",'notification')
         return redirect('/getbalance')
        
-class QueryTable(Table):
-    classes=["table", "table-bordered"]
-    txnID = Col('TransactionID')
-    fac_email = Col('Faculty EmailID')
-    amt = Col('Amount')
-    userID = Col('User')
-    approvals = Col('Number of approvals')
-    approvers = Col('Approvers')
-
 @app.route('/query_email')
 @login_required
 def query_email():
@@ -525,17 +488,12 @@ def query_email_post():
         
         allquerytxns.append(qtxn)
 
-    table = QueryTable(allquerytxns)
- 
-    f = open("templates/table.html", 'w+') 
-    f.truncate(0)
-    tbl_string=str(table.__html__())
-    f.write('{% extends "query_email_rough.html" %}\n{% block content %}\n'+tbl_string+'\n{% endblock %}')
-    f.close()
-
     if(len(allquerytxns)==0):
         flash('No transactions to show','notification')
-    
+
+    else:
+        flash(allquerytxns)
+
     return redirect('/table_query')
 
 @app.route('/query_txnid')
@@ -547,7 +505,7 @@ def query_txnid():
 @login_required
 def query_txnid_post():
     transactions = query_by_txnid(session["email"], request.form["txnid"])
-    print("Transaction is ",transactions)
+    # print("Transaction is ",transactions)
     allquerytxns = []
     qtxn = {}
     qtxn["txnID"] = request.form["txnid"]
@@ -570,17 +528,11 @@ def query_txnid_post():
         qtxn["approvers"] = transactions["approvers"]
 
     allquerytxns.append(qtxn)
-
-    table = QueryTable(allquerytxns)
- 
-    f = open("templates/table.html", 'w+') 
-    f.truncate(0)
-    tbl_string=str(table.__html__())
-    f.write('{% extends "query_txnid_rough.html" %}\n{% block content %}\n'+tbl_string+'\n{% endblock %}')
-    f.close()
-
     if(len(allquerytxns)==0):
         flash('No transactions to show','notification')
+
+    else:
+        flash(allquerytxns)
 
     return redirect('/table_query')
 
@@ -612,19 +564,15 @@ def query():
     
         allquerytxns.append(qtxn)
 
-    table = QueryTable(allquerytxns)
- 
-    f = open("templates/table.html", 'w+') 
-    f.truncate(0)
-    tbl_string=str(table.__html__())
-    f.write('{% extends "queryall_rough.html" %}\n{% block content %}\n'+tbl_string+'\n{% endblock %}')
-    f.close()
     if(len(allquerytxns)==0):
         flash('No transactions to show','notification')
+
+    else:
+        flash(allquerytxns)
 
     return redirect('/table_query')
 
 
 if __name__ == '__main__':
-    app.run(host="192.168.0.152",port="5000")
-    #app.run(debug=True)
+    # app.run()
+    app.run(debug=True)
