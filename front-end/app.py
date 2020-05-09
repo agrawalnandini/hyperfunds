@@ -36,11 +36,11 @@ else:
 # FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
 # NODE_PATH = "/usr/bin/node"
 
-FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
-NODE_PATH = "/usr/local/bin/node"
+# FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
+# NODE_PATH = "/usr/local/bin/node"
 
-# FABRIC_DIR="/home/ubuntu/hyperfunds/fabric-samples/hyperfunds/javascript"
-# NODE_PATH = "/usr//bin/node"
+FABRIC_DIR="/home/ubuntu/hyperfunds/fabric-samples/hyperfunds/javascript"
+NODE_PATH = "/usr//bin/node"
 
 DEBUG = True
 SEND_OTP = True
@@ -571,5 +571,5 @@ def query():
 
 
 if __name__ == '__main__':
-    #app.run(host="172.31.31.162", port="5000")
-    app.run(host="127.0.0.1",port="5000")
+    app.run(host="172.31.31.162", port="5000")
+    #app.run(host="127.0.0.1",port="5000")
