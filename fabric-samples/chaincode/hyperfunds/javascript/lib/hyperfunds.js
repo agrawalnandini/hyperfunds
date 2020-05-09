@@ -83,10 +83,10 @@ class Hyperfunds extends Contract
 			}
 
 			// if new faculty, add faculty to balance dictionary
-			if (!(balance.hasOwnProperty(faculty_email_id))) {
-				console.log(`New faculty! Adding ${faculty_email_id} to the chain state...`);
-				balance[faculty_email_id] = 0;        //Add to dictionary
-			}
+			// if (!(balance.hasOwnProperty(faculty_email_id))) {
+			// 	console.log(`New faculty! Adding ${faculty_email_id} to the chain state...`);
+			// 	balance[faculty_email_id] = 0;        //Add to dictionary
+			// }
 
 			//Obtain current balance for the faculty
 			
@@ -310,6 +310,14 @@ class Hyperfunds extends Contract
 			throw new Error(`Invalid Email ID - not registered as faculty!`);
 		}
 		console.info('============= END : getBalance ===========');
+	}
+
+	async putBalance(ctx,faculty_email_id){
+		console.info('============= START : putBalance ===========');
+		if(faculty_email_id!=dor_email && faculty_email_id!=accdept_email){
+			balance[faculty_email_id]=0;
+		}
+		console.info('============= END : putBalance ===========');
 	}
 
 }
