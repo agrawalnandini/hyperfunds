@@ -79,7 +79,9 @@ class Hyperfunds extends Contract
 		if(userID.includes(faculty_email_id) || userID.includes(dor_email)) {
 			if(userID.includes(faculty_email_id)){
 				//Faculty is only allowed to deduct funds
-				proposed_amount = proposed_amount * (-1)
+				if(proposed_amount > 0) {
+					proposed_amount = proposed_amount * (-1)
+				}
 			}
 
 			// if new faculty, add faculty to balance dictionary

@@ -1,9 +1,9 @@
 {% extends "query_rough.html" %}
 {% block content %}
-<table class="table table-bordered"> <thead><tr><th>TransactionID</th><th>Faculty EmailID</th><th>Amount</th><th>User</th><th>Number of approvals</th><th>Approvers</th></tr></thead> 
 {% with messages= get_flashed_messages()%}
     {% if messages %}
-        <tbody>
+    <table class="table table-bordered"> <thead><tr><th>TransactionID</th><th>Faculty EmailID</th><th>Amount</th><th>User</th><th>Number of approvals</th><th>Approvers</th></tr></thead> 
+       <tbody>
         {%for message in messages%}
             {% if message is iterable and message is not string %}
                 {%for r in message%}
