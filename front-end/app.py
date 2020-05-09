@@ -36,7 +36,7 @@ else:
 # FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
 # NODE_PATH = "/usr/bin/node"
 
-FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
+FABRIC_DIR="/Users/nandiniagrawal/Desktop/Blockchain/hyperfunds/fabric-samples/hyperfunds/javascript"
 NODE_PATH = "/usr/local/bin/node"
 
 # FABRIC_DIR="/home/ubuntu/hyperfunds/fabric-samples/hyperfunds/javascript"

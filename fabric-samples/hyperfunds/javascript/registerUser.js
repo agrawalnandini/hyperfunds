@@ -59,22 +59,19 @@ async function main() {
         console.log(`Successfully registered and enrolled admin user ${user} and imported it into the wallet`);
 
 
-        //creating a gateway to connect to the peer node
-        const g= new Gateway();
-        await g.connect(ccp, {wallet, identity: user, discovery: {enabled: false}});
-
         // Get the network (channel) our contract is deployed to.
-        const network = await g.getNetwork('mychannel');
-
+        const network = await gateway.getNetwork('mychannel');
         // Get the contract from the network.
         const contract = network.getContract('hyperfunds');
         await contract.submitTransaction('putBalance',user);
-        await g.disconnect();
+        await gateway.disconnect();
+            
 
     } catch (error) {
         console.error(`Failed to register user ${user}: ${error}`);
         process.exit(1);
     }
+
 }
 
 main();
