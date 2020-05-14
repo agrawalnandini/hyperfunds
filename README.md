@@ -200,7 +200,7 @@ Multiple other methods update the global dictionary balance_dict. This method re
 ```getBalance(email_ID): return(balance_dict[email_ID])```
 
  
- # Instructions to Run Hyperfunds' on the command line
+ # Instructions to run Hyperfunds on the command line
 1. Run `./teardownHyperfunds` in `fabric-samples/hyperfunds` - in case you have run Hyperfunds before to remove the created files and stop running docker containers from the last session.
 2. Set up arguments to initLedger as your university's DOR and Accounts email address in `startHyperfunds` in `fabric-samples/hyperfunds`. 
 3. Run `./startHyperfunds` - to set up the network and the docker containers
