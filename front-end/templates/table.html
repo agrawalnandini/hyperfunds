@@ -2,8 +2,6 @@
 {% block content %}
 {% with messages= get_flashed_messages()%}
     {% if messages %}
-    <caption><h2>All Transactions</h2></caption>
-    <table> 
         <thead><tr><th>TransactionID</th><th>Faculty EmailID</th><th>Amount</th><th>User</th><th>Number of approvals</th><th>Approvers</th></tr></thead> 
        <tbody>
         {%for message in messages%}
