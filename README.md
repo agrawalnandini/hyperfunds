@@ -3,6 +3,7 @@ A distributed Hyperledger Fabric application made to handle university faculty r
 
 The contributors of this project are Nandini Agrawal, Prashanthi R and Shivam Agarwal.
 
+Presentation: https://drive.google.com/file/d/1_EyxBLz5aelSB0tPD1Q4UpTdtS30Vfbv/view?usp=sharing
 
 ## Project Description:
 
