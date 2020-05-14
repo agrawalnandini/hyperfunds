@@ -1,4 +1,4 @@
-![Hyperfunds Logo](https://github.com/agrawalnandini/hyperfunds/hyperfunds_logo) \
+![Hyperfunds Logo](https://github.com/agrawalnandini/hyperfunds/hyperfunds_logo) 
 
 # Hyperfunds 
 
