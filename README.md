@@ -66,7 +66,7 @@ This javascript file registers users to Hyperfunds. In our project, the Dean of 
 
 Note: The Dean initiates funds to the faculty members’ wallet. This balance is updated on the client side after every successful transaction. It goes without saying that the Accounts department and the Dean will be able to view the updated balance of every faculty. 
 
-The command for registering a user is as follows:\
+The command for registering a user is as follows:
 
 ```
 node registerUser.js dor@uni.edu
@@ -200,7 +200,7 @@ Multiple other methods update the global dictionary balance_dict. This method re
 ```getBalance(email_ID): return(balance_dict[email_ID])```
 
  
- # Instructions to Run Hyperfunds's on the command line
+ # Instructions to Run Hyperfunds' on the command line
 1. Run `./teardownHyperfunds` in `fabric-samples/hyperfunds` - in case you have run Hyperfunds before to remove the created files and stop running docker containers from the last session.
 2. Set up arguments to initLedger as your university's DOR and Accounts email address in `startHyperfunds` in `fabric-samples/hyperfunds`. 
 3. Run `./startHyperfunds` - to set up the network and the docker containers
