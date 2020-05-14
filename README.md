@@ -1,13 +1,13 @@
-![Hyperfunds Logo](https://github.com/agrawalnandini/hyperfunds/front-end/static/icon/hyperfunds_logo.jpg) 
+![Hyperfunds Logo](https://github.com/agrawalnandini/hyperfunds/tree/master/front-end/static/icon/hyperfunds_logo.jpg) 
+
+Project presentation and Demo: https://drive.google.com/file/d/1_EyxBLz5aelSB0tPD1Q4UpTdtS30Vfbv/view?usp=sharing \
+Slides: https://docs.google.com/presentation/d/12Y_HGIl-IRDt0KJVa8YsLfOHK3RsOB1BkuhI540HK24/edit?usp=sharing
 
 # Hyperfunds 
 
 A distributed Hyperledger Fabric application made to handle university faculty research funds in a secure way.
 
 The contributors of this project are Nandini Agrawal, Prashanthi R and Shivam Agarwal.
-
-Project presentation and Demo: https://drive.google.com/file/d/1_EyxBLz5aelSB0tPD1Q4UpTdtS30Vfbv/view?usp=sharing \
-Slides: https://docs.google.com/presentation/d/12Y_HGIl-IRDt0KJVa8YsLfOHK3RsOB1BkuhI540HK24/edit?usp=sharing
 
 ## Project Description:
 
