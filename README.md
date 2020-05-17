@@ -1,4 +1,4 @@
-![Hyperfunds Logo](front-end/static/icon/hyperfunds_logo.jpg | width=100) 
+![Hyperfunds Logo](front-end/static/icon/hyperfunds_logo.jpg = 100x100) 
 
 Project presentation and Demo: https://drive.google.com/file/d/1_EyxBLz5aelSB0tPD1Q4UpTdtS30Vfbv/view?usp=sharing \
 Slides: https://docs.google.com/presentation/d/12Y_HGIl-IRDt0KJVa8YsLfOHK3RsOB1BkuhI540HK24/edit?usp=sharing
