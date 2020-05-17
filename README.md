@@ -1,6 +1,6 @@
 # Hyperfunds 
 
-A distributed Hyperledger Fabric application made to handle university faculty research funds in a secure way.
+A distributed Hyperledger Fabric full-stack application made to handle university faculty research funds in a secure way.
 
 ![Hyperfunds Logo](front-end/static/icon/hyperfunds_logo.png)
 
@@ -8,7 +8,7 @@ Project presentation and Demo: https://drive.google.com/file/d/1_EyxBLz5aelSB0tP
 Slides: https://docs.google.com/presentation/d/12Y_HGIl-IRDt0KJVa8YsLfOHK3RsOB1BkuhI540HK24/edit?usp=sharing \
 Currently hosted on an Amazon EC2 server at: http://3.23.120.242:5000/ 
 
-#### The contributors of this project are Nandini Agrawal, Prashanthi R and Shivam Agarwal.
+#### The contributors of this project are Nandini Agrawal, Prashanthi R, and Shivam Agarwal.
 
 ## Project Description:
 
@@ -220,7 +220,12 @@ Multiple other methods update the global dictionary balance_dict. This method re
  ./stopHyperFunds - stop all docker containers and the network from running.
  
 # Contact Information
-You can report any bugs to or get clarifications from any of the three of us:\
+You can report any bugs to or get clarifications from any of the three of us:
+
 Nandini Agrawal (nandini.agrawal_ug20@ashoka.edu.in)\
 Prashanthi R (prashanthi.r_ug20@ashoka.edu.in)\
 Shivam Agarwal (shivam.agarwal_ug20@ashoka.edu.in)
+
+# Note
+
+This application accepts only ashoka.edu.in domain email IDs
