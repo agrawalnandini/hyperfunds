@@ -33,14 +33,14 @@ else:
     utils.write_file(db_path, "{}")
 
 
-# FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
-# NODE_PATH = "/usr/bin/node"
+FABRIC_DIR="/home/prashanthi/hyperfunds/fabric-samples/hyperfunds/javascript"
+NODE_PATH = "/usr/bin/node"
 
 # FABRIC_DIR="/Users/nandiniagrawal/Desktop/hyperfunds/fabric-samples/hyperfunds/javascript"
 # NODE_PATH = "/usr/local/bin/node"
 
-FABRIC_DIR="/home/ubuntu/hyperfunds/fabric-samples/hyperfunds/javascript"
-NODE_PATH = "/usr//bin/node"
+# FABRIC_DIR="/home/ubuntu/hyperfunds/fabric-samples/hyperfunds/javascript"
+# NODE_PATH = "/usr//bin/node"
 
 DEBUG = True
 SEND_OTP = True
@@ -159,7 +159,7 @@ def requires_access_level(access_level):
             #     return redirect(url_for('login'))
             user = load_user(session['email'])
             if user.access!=access_level:
-                return render_template('response.html', response="Operation not authorized")
+                return render_template('response.html', response="Operation not authorized!")
             return f(*args, **kwargs)
         return decorated_function
     return decorator
@@ -571,5 +571,6 @@ def query():
 
 
 if __name__ == '__main__':
-    app.run(host="172.31.31.162", port="5000")
-    #app.run(host="127.0.0.1",port="5000")
+    # app.run(host="172.31.31.162", port="5000")
+    # app.run(host="127.0.0.1",port="5000")
+    app.run(debug=True,port="5000")

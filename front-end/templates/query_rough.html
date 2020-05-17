@@ -29,6 +29,10 @@ h2 {
   padding: 20px 0;
 }
 
+caption {
+	background-color: #FFFFFF;	
+}
+
 table tr{
   background-color: #FFFFFF;
 }
@@ -38,10 +42,9 @@ table tr{
 <body>
 	<div class="bg-contact100" style="background-image: url('../static/icon/image.jpeg');">
 		<div class="container-contact100">
-			<!-- <div class = "back-button">
-				<i class="fa fa-arrow-left"  aria-hidden="true"></i>
-			</div> -->
-			<h2>All Transactions</h2>
+			<!-- <a href="javascript:history.back()"><div class = "back-button">
+				<i class="fa fa-arrow-left"  aria-hidden="true"></i> 
+			</div></a> -->
 			<div class="table-bordered">
 				{% block content %}
 				{% endblock %}
