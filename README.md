@@ -6,7 +6,7 @@ A distributed Hyperledger Fabric full-stack application made to handle universit
 
 Project presentation and Demo: https://drive.google.com/file/d/1_EyxBLz5aelSB0tPD1Q4UpTdtS30Vfbv/view?usp=sharing \
 Slides: https://docs.google.com/presentation/d/12Y_HGIl-IRDt0KJVa8YsLfOHK3RsOB1BkuhI540HK24/edit?usp=sharing \
-Currently hosted on an Amazon EC2 server at: http://3.23.120.242:5000/ 
+Currently hosted on an Amazon EC2 server at: http://3.23.120.242/ 
 
 #### The contributors of this project are Nandini Agrawal, Prashanthi R, and Shivam Agarwal.
 
