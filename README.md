@@ -222,9 +222,9 @@ Multiple other methods update the global dictionary balance_dict. This method re
 # Contact Information
 You can report any bugs to or get clarifications from any of the three of us:
 
-Nandini Agrawal (nandini.agrawal_ug20@ashoka.edu.in)\
-Prashanthi R (prashanthi.r_ug20@ashoka.edu.in)\
-Shivam Agarwal (shivam.agarwal_ug20@ashoka.edu.in)
+Nandini Agrawal (nandini.agrawal@alumni.ashoka.edu.in)\
+Prashanthi R (prashanthi.r@alumni.ashoka.edu.in)\
+Shivam Agarwal (shivam.agarwal@alumni.ashoka.edu.in)
 
 # Note
 
